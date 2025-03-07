@@ -10,7 +10,7 @@
             player(ign);
         }
 
-        static void player(String ign)
+        static void player(string ign)
         {
             Console.WriteLine("\n\nWelcome to Mekus Mekus Game " + ign);
 
@@ -42,7 +42,7 @@
                 player(ign);
             }
         }
-        static void Game(String ign)
+        static void Game(string ign)
         {
             int lives = 3;
             int score = 0;
