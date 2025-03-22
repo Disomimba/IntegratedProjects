@@ -28,7 +28,7 @@
                     Console.WriteLine("---------------------");
                     Console.Write("Enter your Username : ");
                     string ign = Console.ReadLine();
-                    player(ign);
+                    Player(ign);
                     break;
                 case 3:
                     Leaderboards(playersScore);
@@ -39,21 +39,23 @@
                     break;
             }
         }
-        static void player(string ign)
+        static void Player(string ign)
         {
 
             Console.WriteLine("---------------------");
             Console.WriteLine("Welcome to Mekus Mekus Game " + ign);
-            Console.WriteLine("\n[1]Start\n[2]Rules & Mechanics");
+            Console.WriteLine("\n[1]Start\n[2]Rules & Mechanics\n[3]Exit");
             Console.Write("\nI will select no. ");
             int playerChoice = Convert.ToInt16(Console.ReadLine());
-            Console.WriteLine("---------------------");
+
             if (playerChoice == 1)
             {
+                Console.WriteLine("---------------------");
                 ActualGame(ign);
             }
             else if (playerChoice == 2)
             {
+                Console.WriteLine("---------------------");
                 Console.Write("Rules & Mechanics\n1 - In this game, you'll be given shuffled words to arrange." +
                     "\n2 - Answer must be Capitalize." +
                     "\n3 - Answer shouldn't contains spaces." +
@@ -61,19 +63,23 @@
 
                 Console.WriteLine("\nPress any key to go back");
                 Console.ReadKey();
-                player(ign);
+                Player(ign);
+            }
+            else if (playerChoice == 3)
+            {
+                WelcomePage();
             }
             else
             {
                 Console.WriteLine("\n\nInvalid Choice, Please Select again.\n\n");
-                player(ign);
+                Player(ign);
             }
         }
         static void ActualGame(string ign)
         {
             int lives = 3;
             int score = 0;
-            
+
 
             Console.WriteLine(ign + " you have " + lives + " tries.");
 
@@ -116,7 +122,7 @@
             {
                 Console.Write("Thank You for playing");
                 Console.ReadKey();
-                playersScore += ign + "\t\t" + score +"\n";
+                playersScore += ign + "\t\t" + score + "\n";
                 WelcomePage();
             }
             else
