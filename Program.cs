@@ -1,8 +1,11 @@
-﻿namespace Project_1
+﻿using GameBusinessLogic;
+namespace Project_1
 {
     internal class Program
     {
+        static string ign = "";
         static string playersScore = "";
+        static int adminPin = 0000;
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome to Mekus Mekus Game");
@@ -22,13 +25,10 @@
             switch (action)
             {
                 case 1:
-                    Console.Write("Coming soon.");
+                    Admin();
                     break;
                 case 2:
-                    Console.WriteLine("---------------------");
-                    Console.Write("Enter your Username : ");
-                    string ign = Console.ReadLine();
-                    Player(ign);
+                    Username(ign);
                     break;
                 case 3:
                     Leaderboards(playersScore);
@@ -39,12 +39,57 @@
                     break;
             }
         }
+        static void Admin()
+        {
+
+            Console.Write("Enter Pin : ");
+            int pin = Convert.ToInt16(Console.ReadLine());
+            if (pin == adminPin)
+            {
+                //Console.Write("Success Pin! \n Features Coming Soon : \n[1] Delete a user\n[2] Add Words");
+                Console.Write("Success Pin! \n\n [1] Clear Leaderboards\n [2] Change Pin\n [3] Exit\nEnter Action : ");
+                int adminAction = Convert.ToInt16(Console.ReadLine());
+                if (adminAction == 1)
+                {
+                    GameBL.scoreList.Clear();
+                    Console.WriteLine("Leaderboards Cleared!");
+                    Console.ReadKey();
+                    Admin();
+                }
+                else if (adminAction == 3)
+                {
+                    AdminChangePin();
+
+                }
+                else if (adminAction == 2)
+                {
+                    WelcomePage();
+
+                }
+                else
+                {
+                    Console.WriteLine("Invalid Choice : Please select 1 or 2");
+                    Admin();
+                }
+            }
+            else
+            {
+                Console.Write("Incorrect Pin! \n Features Coming Soon : \n[1] Delete a user\n[2] Add Words");
+                Console.ReadKey();
+                WelcomePage();
+            }
+        }
+        static void AdminChangePin()
+        {
+            Console.Write("Enter your new pin : ");
+            adminPin = Convert.ToInt16(Console.ReadLine());
+        }
         static void Player(string ign)
         {
 
             Console.WriteLine("---------------------");
             Console.WriteLine("Welcome to Mekus Mekus Game " + ign);
-            Console.WriteLine("\n[1]Start\n[2]Rules & Mechanics\n[3]Exit");
+            Console.WriteLine("\n[1]Start\n[2]Rules & Mechanics\n[3]Change Username\n[4]Exit");
             Console.Write("\nI will select no. ");
             int playerChoice = Convert.ToInt16(Console.ReadLine());
 
@@ -67,6 +112,10 @@
             }
             else if (playerChoice == 3)
             {
+                Username(ign);
+            }
+            else if (playerChoice == 4)
+            {
                 WelcomePage();
             }
             else
@@ -75,45 +124,44 @@
                 Player(ign);
             }
         }
+        static void Username(string ign)
+        {
+            Console.WriteLine("---------------------");
+            Console.Write("Enter your Username : ");
+            ign = Console.ReadLine();
+            Player(ign);
+        }
         static void ActualGame(string ign)
         {
-            int lives = 3;
-            int score = 0;
-
-
-            Console.WriteLine(ign + " you have " + lives + " tries.");
-
-            string[] wordsEasy = { "Y E E S", "N S P I", "S A C H", "C E H S S", "W E R I S", "H A L K C" };
-            string[] answersOfEasy = { "EYES", "SPIN", "CASH", "CHESS", "WIRES", "CHALK" };
+            Console.WriteLine(ign + " you have " + GameBL.Lives() + " tries.");
             int i = 0;
-
-            while (i < wordsEasy.Length && lives > 0)
+            while (i < GameBL.TotalQuestions() && GameBL.Lives() > 0)
             {
                 int shuffleNumber = i + 1;
                 Console.WriteLine("\nShuffled Word no. " + shuffleNumber);
-                Console.WriteLine("\nArrange the letters\n" + wordsEasy[i] + "\n");
+                Console.WriteLine("\nArrange the letters\n" + GameBL.Questions(i) + "\n");
                 string ans = Console.ReadLine();
-                if (ans == answersOfEasy[i])
+                if (ans == GameBL.Answers(i))
                 {
                     Console.WriteLine("\nCORRECT! : GUESS");
                     Console.WriteLine("---------------------");
-                    score++;
+                    GameBL.Correct();
                 }
                 else
                 {
-                    lives--;
+                    GameBL.Incorrect();
                     Console.WriteLine("\nINCORRECT! : GUESS");
-                    Console.WriteLine("\nYour current lives is " + lives + "\n");
+                    Console.WriteLine("\nYour current lives is " + GameBL.Lives());
                     Console.WriteLine("---------------------");
 
-                    if (lives == 0)
+                    if (GameBL.Lives() == 0)
                     {
                         Console.WriteLine("GAME OVER");
                     }
                 }
                 i++;
             }
-            Console.WriteLine("Your Score is : " + score);
+            Console.WriteLine("Your Score is : " + GameBL.ShowScore());
             Console.WriteLine("\n\nDo you want to try again?\n\nPress 1 if 'Yes', Any number if No");
             Console.Write("\nI will select no. ");
             int playAgain = Convert.ToInt16(Console.ReadLine());
@@ -122,22 +170,26 @@
             {
                 Console.Write("Thank You for playing");
                 Console.ReadKey();
-                playersScore += ign + "\t\t" + score + "\n";
+                GameBL.Leaderboards(ign, GameBL.ShowScore());
+                GameBL.Reset();
                 WelcomePage();
             }
             else
             {
+                GameBL.Reset();
                 Console.WriteLine("---------------------");
                 ActualGame(ign);
-
             }
-
         }
+        
         static void Leaderboards(String scores)
         {
+            Console.WriteLine("---------------------");
             Console.WriteLine("LEADERBOARDS");
-
-            Console.WriteLine(scores);
+            foreach(var displayScores in GameBL.scoreList)
+            {
+                Console.WriteLine(displayScores);
+            }
             Console.ReadKey();
             WelcomePage();
         }
