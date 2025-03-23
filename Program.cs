@@ -25,7 +25,10 @@ namespace Project_1
             switch (action)
             {
                 case 1:
-                    Admin();
+                    Console.WriteLine("---------------------");
+                    Console.Write("Enter Pin : ");
+                    int pin = Convert.ToInt16(Console.ReadLine());
+                    Admin(pin);
                     break;
                 case 2:
                     Username(ign);
@@ -39,29 +42,28 @@ namespace Project_1
                     break;
             }
         }
-        static void Admin()
+        static void Admin(int pin)
         {
-
-            Console.Write("Enter Pin : ");
-            int pin = Convert.ToInt16(Console.ReadLine());
+            Console.WriteLine("---------------------");
             if (pin == adminPin)
             {
                 //Console.Write("Success Pin! \n Features Coming Soon : \n[1] Delete a user\n[2] Add Words");
-                Console.Write("Success Pin! \n\n [1] Clear Leaderboards\n [2] Change Pin\n [3] Exit\nEnter Action : ");
+                Console.Write("Success Pin!\n[1] Clear Leaderboards\n[2] Change Pin\n[3] Exit\nEnter Action : ");
                 int adminAction = Convert.ToInt16(Console.ReadLine());
                 if (adminAction == 1)
                 {
                     GameBL.scoreList.Clear();
-                    Console.WriteLine("Leaderboards Cleared!");
+                    Console.WriteLine("---------------------");
+                    Console.Write("Leaderboards Cleared!");
                     Console.ReadKey();
-                    Admin();
+                    Admin(pin);
                 }
-                else if (adminAction == 3)
+                else if (adminAction == 2)
                 {
                     AdminChangePin();
 
                 }
-                else if (adminAction == 2)
+                else if (adminAction == 3)
                 {
                     WelcomePage();
 
@@ -69,12 +71,12 @@ namespace Project_1
                 else
                 {
                     Console.WriteLine("Invalid Choice : Please select 1 or 2");
-                    Admin();
+                    Admin(pin);
                 }
             }
             else
             {
-                Console.Write("Incorrect Pin! \n Features Coming Soon : \n[1] Delete a user\n[2] Add Words");
+                Console.WriteLine("Incorrect Pin!");
                 Console.ReadKey();
                 WelcomePage();
             }
@@ -83,6 +85,7 @@ namespace Project_1
         {
             Console.Write("Enter your new pin : ");
             adminPin = Convert.ToInt16(Console.ReadLine());
+            Admin(adminPin);
         }
         static void Player(string ign)
         {
@@ -140,8 +143,8 @@ namespace Project_1
                 int shuffleNumber = i + 1;
                 Console.WriteLine("\nShuffled Word no. " + shuffleNumber);
                 Console.WriteLine("\nArrange the letters\n" + GameBL.Questions(i) + "\n");
-                string ans = Console.ReadLine();
-                if (ans == GameBL.Answers(i))
+                string answer = Console.ReadLine();
+                if (answer == GameBL.Answers(i))
                 {
                     Console.WriteLine("\nCORRECT! : GUESS");
                     Console.WriteLine("---------------------");
@@ -162,7 +165,7 @@ namespace Project_1
                 i++;
             }
             Console.WriteLine("Your Score is : " + GameBL.ShowScore());
-            Console.WriteLine("\n\nDo you want to try again?\n\nPress 1 if 'Yes', Any number if No");
+            Console.WriteLine("\n\nDo you want to try again?\n\nPress 1 if 'Yes', Any number if 'No'");
             Console.Write("\nI will select no. ");
             int playAgain = Convert.ToInt16(Console.ReadLine());
 
@@ -181,8 +184,7 @@ namespace Project_1
                 ActualGame(ign);
             }
         }
-        
-        static void Leaderboards(String scores)
+        static void Leaderboards(string scores)
         {
             Console.WriteLine("---------------------");
             Console.WriteLine("LEADERBOARDS");
