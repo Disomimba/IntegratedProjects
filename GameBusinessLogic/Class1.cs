@@ -5,8 +5,9 @@ public class GameBL
 {
     static int score = 0;
     static int lives = 3;
+    static int adminPin = 0000;
 
-    static string[] questions = { "Y E E S", "N S P I", "S A C H", "C E H S S",  "H A L K C" };
+    static string[] questions = { "YEES", "NSPI", "SACH", "CEHSS",  "HALKC" };
     static string[] answers = { "EYES", "SPIN", "CASH", "CHESS",  "CHALK" };
     public static List<string> questionsList = new List<string>(questions);
     public static List<string> answersList = new List<string>(answers);
@@ -38,7 +39,6 @@ public class GameBL
         scoreList.Add(playerUsername + "\t" + playerScore);
         
     }
-    
     public static string QuestionsList(int i)
     {
         return questionsList[i];
@@ -46,6 +46,27 @@ public class GameBL
     public static string AnswersList(int i)
     {
         return answersList[i];
+    }
+    public static void LeaderboardClear()
+    {
+        scoreList.Clear();
+    }
+    public static void AddShuffledWords(string newAnswer, string newShuffled)
+    {
+        answersList.Add(newAnswer);
+        questionsList.Add(newShuffled);
+    }
+    public static bool PinValidator(int inputtedPin)
+    {
+        return adminPin == inputtedPin;
+    }
+    public static void ChangePIN(int inputtedPin)
+    {
+        adminPin = inputtedPin;
+    }
+    public static string ShowQuestionAndAnwers(int i)
+    {
+            return i + 1 + ". " +questionsList[i] + "\t" + answersList[i];
     }
 
 }
