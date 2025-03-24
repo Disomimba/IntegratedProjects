@@ -6,10 +6,9 @@ public class GameBL
     static int score = 0;
     static int lives = 3;
 
-    static string[] questions = { "Y E E S", "N S P I", "S A C H", "C E H S S", "W E R I S", "H A L K C" };
-    static string[] answers = { "EYES", "SPIN", "CASH", "CHESS", "WIRES", "CHALK" };
+    static string[] questions = { "Y E E S", "N S P I", "S A C H", "C E H S S",  "H A L K C" };
+    static string[] answers = { "EYES", "SPIN", "CASH", "CHESS",  "CHALK" };
     public static List<string> scoreList = new List<string>();
-
     public static int Correct()
     {
         score++;

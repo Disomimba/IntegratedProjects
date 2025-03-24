@@ -1,4 +1,5 @@
 ﻿using GameBusinessLogic;
+using System.Net.NetworkInformation;
 namespace Project_1
 {
     internal class Program
@@ -36,6 +37,9 @@ namespace Project_1
                 case 3:
                     Leaderboards(playersScore);
                     break;
+                case 4:
+                    Console.WriteLine("Until next time, word wizard!");
+                    break;
                 default:
                     Console.WriteLine("Please select 1-4 only.");
                     WelcomePage();
@@ -48,13 +52,13 @@ namespace Project_1
             if (pin == adminPin)
             {
                 //Console.Write("Success Pin! \n Features Coming Soon : \n[1] Delete a user\n[2] Add Words");
-                Console.Write("Success Pin!\n[1] Clear Leaderboards\n[2] Change Pin\n[3] Exit\nEnter Action : ");
+                Console.Write("Success Pin!\n[1] Clear Leaderboards\n[2] Change Pin\n[3]  Exit\nEnter Action : ");
                 int adminAction = Convert.ToInt16(Console.ReadLine());
                 if (adminAction == 1)
                 {
                     GameBL.scoreList.Clear();
                     Console.WriteLine("---------------------");
-                    Console.Write("Leaderboards Cleared!");
+                    Console.WriteLine("Leaderboards Cleared!");
                     Console.ReadKey();
                     Admin(pin);
                 }
@@ -66,11 +70,10 @@ namespace Project_1
                 else if (adminAction == 3)
                 {
                     WelcomePage();
-
                 }
                 else
                 {
-                    Console.WriteLine("Invalid Choice : Please select 1 or 2");
+                    Console.WriteLine("Invalid Choice : Please select 1-2");
                     Admin(pin);
                 }
             }
@@ -98,16 +101,14 @@ namespace Project_1
 
             if (playerChoice == 1)
             {
-                Console.WriteLine("---------------------");
                 ActualGame(ign);
             }
             else if (playerChoice == 2)
             {
                 Console.WriteLine("---------------------");
                 Console.Write("Rules & Mechanics\n1 - In this game, you'll be given shuffled words to arrange." +
-                    "\n2 - Answer must be Capitalize." +
-                    "\n3 - Answer shouldn't contains spaces." +
-                    "\n4 - You only have 3 lives.\n");
+                    "\n2 - Answer shouldn't contains spaces." +
+                    "\n3 - You only have 3 lives.\n");
 
                 Console.WriteLine("\nPress any key to go back");
                 Console.ReadKey();
@@ -136,6 +137,7 @@ namespace Project_1
         }
         static void ActualGame(string ign)
         {
+            Console.WriteLine("---------------------");
             Console.WriteLine(ign + " you have " + GameBL.Lives() + " tries.");
             int i = 0;
             while (i < GameBL.TotalQuestions() && GameBL.Lives() > 0)
@@ -143,7 +145,7 @@ namespace Project_1
                 int shuffleNumber = i + 1;
                 Console.WriteLine("\nShuffled Word no. " + shuffleNumber);
                 Console.WriteLine("\nArrange the letters\n" + GameBL.Questions(i) + "\n");
-                string answer = Console.ReadLine();
+                string answer = Console.ReadLine().ToUpper();
                 if (answer == GameBL.Answers(i))
                 {
                     Console.WriteLine("\nCORRECT! : GUESS");
@@ -165,13 +167,12 @@ namespace Project_1
                 i++;
             }
             Console.WriteLine("Your Score is : " + GameBL.ShowScore());
-            Console.WriteLine("\n\nDo you want to try again?\n\nPress 1 if 'Yes', Any number if 'No'");
-            Console.Write("\nI will select no. ");
-            int playAgain = Convert.ToInt16(Console.ReadLine());
+            Console.WriteLine("\n\nDo you want to try again? (type YES to Continue) :");
+            string playAgain = Console.ReadLine().ToUpper();
 
-            if (playAgain != 1)
+            if (playAgain != "YES")
             {
-                Console.Write("Thank You for playing");
+                Console.WriteLine("Until next time, word wizard!");
                 Console.ReadKey();
                 GameBL.Leaderboards(ign, GameBL.ShowScore());
                 GameBL.Reset();
@@ -180,7 +181,7 @@ namespace Project_1
             else
             {
                 GameBL.Reset();
-                Console.WriteLine("---------------------");
+                
                 ActualGame(ign);
             }
         }
