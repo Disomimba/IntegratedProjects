@@ -8,6 +8,8 @@ public class GameBL
 
     static string[] questions = { "Y E E S", "N S P I", "S A C H", "C E H S S",  "H A L K C" };
     static string[] answers = { "EYES", "SPIN", "CASH", "CHESS",  "CHALK" };
+    public static List<string> questionsList = new List<string>(questions);
+    public static List<string> answersList = new List<string>(answers);
     public static List<string> scoreList = new List<string>();
     public static int Correct()
     {
@@ -36,17 +38,14 @@ public class GameBL
         scoreList.Add(playerUsername + "\t" + playerScore);
         
     }
-    public static string Questions(int i)
-    {
-        return questions[i];
-    }
-    public static string Answers(int i)
-    {
-        return answers[i];
-    }
-    public static int TotalQuestions()
-    {
-        return questions.Length;
-    }
     
+    public static string QuestionsList(int i)
+    {
+        return questionsList[i];
+    }
+    public static string AnswersList(int i)
+    {
+        return answersList[i];
+    }
+
 }

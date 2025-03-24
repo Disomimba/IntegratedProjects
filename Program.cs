@@ -52,7 +52,7 @@ namespace Project_1
             if (pin == adminPin)
             {
                 //Console.Write("Success Pin! \n Features Coming Soon : \n[1] Delete a user\n[2] Add Words");
-                Console.Write("Success Pin!\n[1] Clear Leaderboards\n[2] Change Pin\n[3]  Exit\nEnter Action : ");
+                Console.Write("Success Pin!\n[1] Clear Leaderboards\n[2] Change Pin\n[3] Add Word\n[4] Exit\nEnter Action : ");
                 int adminAction = Convert.ToInt16(Console.ReadLine());
                 if (adminAction == 1)
                 {
@@ -69,11 +69,17 @@ namespace Project_1
                 }
                 else if (adminAction == 3)
                 {
+                    AddWord(pin);
+
+                }
+                else if (adminAction == 4)
+                {
                     WelcomePage();
+
                 }
                 else
                 {
-                    Console.WriteLine("Invalid Choice : Please select 1-2");
+                    Console.WriteLine("Invalid Choice : Please select 1 or 2");
                     Admin(pin);
                 }
             }
@@ -83,6 +89,24 @@ namespace Project_1
                 Console.ReadKey();
                 WelcomePage();
             }
+        }
+        static void AddWord(int pin)
+        {
+            Console.WriteLine("---------------------");
+            string addMore = "";
+            do
+            {
+                Console.Write("Enter The Arranged Word : ");
+                string newArrangedWord = Console.ReadLine().ToUpper();
+                Console.Write("Enter the shuffled word (all caps, with spaces between each character) : ");
+                string newShuffledWord = Console.ReadLine().ToUpper();
+                GameBL.questionsList.Add(newShuffledWord);
+                GameBL.answersList.Add(newArrangedWord);
+                Console.WriteLine("New shuffled and arranged word added successfully!");
+                Console.Write("Would you like to add another word? (type 'YES' to continue, any other key to exit) : ");
+                addMore = Console.ReadLine().ToUpper();
+            } while (addMore == "YES");
+            Admin(pin);
         }
         static void AdminChangePin()
         {
@@ -101,7 +125,7 @@ namespace Project_1
 
             if (playerChoice == 1)
             {
-                ActualGame(ign);
+                Start(ign);
             }
             else if (playerChoice == 2)
             {
@@ -135,54 +159,60 @@ namespace Project_1
             ign = Console.ReadLine();
             Player(ign);
         }
-        static void ActualGame(string ign)
+        static void Start(string ign)
         {
             Console.WriteLine("---------------------");
-            Console.WriteLine(ign + " you have " + GameBL.Lives() + " tries.");
-            int i = 0;
-            while (i < GameBL.TotalQuestions() && GameBL.Lives() > 0)
+            Console.WriteLine($"{ign}, you have {GameBL.Lives()} tries.");
+
+            for (int i = 0; i < GameBL.questionsList.Count() && GameBL.Lives() > 0; i++)
             {
-                int shuffleNumber = i + 1;
-                Console.WriteLine("\nShuffled Word no. " + shuffleNumber);
-                Console.WriteLine("\nArrange the letters\n" + GameBL.Questions(i) + "\n");
-                string answer = Console.ReadLine().ToUpper();
-                if (answer == GameBL.Answers(i))
-                {
-                    Console.WriteLine("\nCORRECT! : GUESS");
-                    Console.WriteLine("---------------------");
-                    GameBL.Correct();
-                }
-                else
-                {
-                    GameBL.Incorrect();
-                    Console.WriteLine("\nINCORRECT! : GUESS");
-                    Console.WriteLine("\nYour current lives is " + GameBL.Lives());
-                    Console.WriteLine("---------------------");
-
-                    if (GameBL.Lives() == 0)
-                    {
-                        Console.WriteLine("GAME OVER");
-                    }
-                }
-                i++;
+                Game(i);
             }
-            Console.WriteLine("Your Score is : " + GameBL.ShowScore());
-            Console.WriteLine("\n\nDo you want to try again? (type YES to Continue) :");
-            string playAgain = Console.ReadLine().ToUpper();
 
-            if (playAgain != "YES")
+            DisplayFinalScore(ign);
+        }
+        static void Game(int i)
+        {
+            Console.WriteLine($"\nShuffled Word no. {i + 1}");
+            Console.WriteLine($"\nArrange the letters\n{GameBL.QuestionsList(i)}\n");
+
+            string answer = Console.ReadLine().ToUpper();
+            if (answer == GameBL.AnswersList(i))
+            {
+                Console.WriteLine("\nCORRECT! : GUESS");
+                Console.WriteLine("---------------------");
+                GameBL.Correct();
+            }
+            else
+            {
+                GameBL.Incorrect();
+                Console.WriteLine("\nINCORRECT! : GUESS");
+                Console.WriteLine($"\nYour current lives is {GameBL.Lives()}");
+                Console.WriteLine("---------------------");
+
+                if (GameBL.Lives() == 0)
+                {
+                    Console.WriteLine("GAME OVER");
+                }
+            }
+        }
+        static void DisplayFinalScore(string ign)
+        {
+            Console.WriteLine($"Your Score is: {GameBL.ShowScore()}");
+            Console.Write("\n\nDo you want to try again? (type YES to Continue):");
+            string playAgain = Console.ReadLine().ToUpper();
+            if (playAgain == "YES")
+            {
+                GameBL.Reset();
+                Start(ign);
+            }
+            else
             {
                 Console.WriteLine("Until next time, word wizard!");
                 Console.ReadKey();
                 GameBL.Leaderboards(ign, GameBL.ShowScore());
                 GameBL.Reset();
                 WelcomePage();
-            }
-            else
-            {
-                GameBL.Reset();
-                
-                ActualGame(ign);
             }
         }
         static void Leaderboards(string scores)
