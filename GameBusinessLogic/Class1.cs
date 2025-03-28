@@ -6,9 +6,9 @@ public class GameBL
     static int score = 0;
     static int lives = 3;
     static int adminPin = 0000;
-
-    static string[] questions = { "YEES", "NSPI", "SACH", "CEHSS",  "HALKC" };
-    static string[] answers = { "EYES", "SPIN", "CASH", "CHESS",  "CHALK" };
+    public static string username = "";
+    static string[] questions = { "YEES", "NSPI", "SACH", "CEHSS", "HALKC" };
+    static string[] answers = { "EYES", "SPIN", "CASH", "CHESS", "CHALK" };
     public static List<string> questionsList = new List<string>(questions);
     public static List<string> answersList = new List<string>(answers);
     public static List<string> scoreList = new List<string>();
@@ -37,7 +37,7 @@ public class GameBL
     public static void Leaderboards(string playerUsername, int playerScore)
     {
         scoreList.Add(playerUsername + "\t" + playerScore);
-        
+
     }
     public static string QuestionsList(int i)
     {
@@ -64,9 +64,34 @@ public class GameBL
     {
         adminPin = inputtedPin;
     }
+    
     public static string ShowQuestionAndAnwers(int i)
     {
-            return i + 1 + ". " +questionsList[i] + "\t" + answersList[i];
+        return i + 1 + ". " + questionsList[i] + "\t" + answersList[i];
     }
-
+    public static bool WelcomeMenuValidator(int userActions)
+    {
+        if(userActions >= 1 && userActions <= 4 )
+        {
+            return true;
+        }
+        return false;
+    }
+    
+    public static bool AdminMenuValidator(int adminActions)
+    {
+        if (adminActions >= 1 && adminActions <= 5)
+        {
+            return true;
+        }
+        return false;
+    }
+    public static string PlayerUsername()
+    {
+        return username;
+    }
+    public static void ChangeUsername(string newUsername)
+    {
+        username = newUsername;
+    }
 }

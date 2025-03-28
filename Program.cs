@@ -4,7 +4,6 @@ namespace Project_1
 {
     internal class Program
     {
-        static string ign = "";
         static string playersScore = "";
         static void Main(string[] args)
         {
@@ -13,33 +12,40 @@ namespace Project_1
         }
         static void WelcomePage()
         {
-            Console.WriteLine("---------------------");
-            string[] listAction = { "[1] Admin", "[2] Player", "[3] Leaderboards", "[4] Exit" };
-            foreach (string list in listAction)
+            int action;
+            do
             {
-                Console.WriteLine(list);
-            }
-            Console.Write("Enter Action : ");
-            int action = Convert.ToInt16(Console.ReadLine());
-            switch (action)
-            {
-                case 1:
-                    AdminLogin();
-                    break;
-                case 2:
-                    Username(ign);
-                    break;
-                case 3:
-                    Leaderboards(playersScore);
-                    break;
-                case 4:
-                    Console.WriteLine("Until next time, word wizard!");
-                    break;
-                default:
-                    Console.WriteLine("Please select 1 - 4 only.");
-                    WelcomePage();
-                    break;
-            }
+                Console.WriteLine("---------------------");
+                Console.WriteLine("[1] Admin\n" +
+                    "[2] Player\n" +
+                    "[3] Leaderboards\n" +
+                    "[4] Exit");
+                Console.Write("Enter Action : ");
+                action = Convert.ToInt16(Console.ReadLine());
+                if (GameBL.WelcomeMenuValidator(action))
+                {
+                    switch (action)
+                    {
+                        case 1:
+                            AdminLogin();
+                            break;
+                        case 2:
+                            Username(GameBL.username);
+                            break;
+                        case 3:
+                            Leaderboards(playersScore);
+                            break;
+                        case 4:
+                            Console.WriteLine("Until next time, word wizard!");
+                          
+                            break;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input. Please enter a number between 1 and 4.");
+                }
+            } while (action != 4);
         }
         static void AdminLogin()
         {
@@ -59,41 +65,47 @@ namespace Project_1
         }
         static void AdminMenu(int pin)
         {
-            Console.WriteLine("---------------------");
-            Console.Write("Correct Pin!\n[1] Clear Leaderboards\n[2] Change Pin\n[3] Add Word\n[4] Show Arranged and Shuffled Words\n[4] Exit\nEnter Action : ");
-            int adminAction = Convert.ToInt16(Console.ReadLine());
-            if (adminAction == 1)
+            while (true)
             {
-                GameBL.LeaderboardClear();
                 Console.WriteLine("---------------------");
-                Console.WriteLine("Leaderboards Cleared!");
-                Console.ReadKey();
-                AdminMenu(pin);
+                Console.Write("Correct Pin!\n" +
+                    "[1] Clear Leaderboards\n" +
+                    "[2] Change Pin\n" +
+                    "[3] Add Word\n" +
+                    "[4] Show Arranged and Shuffled Words\n" +
+                    "[5] Exit\nEnter Action : ");
+                int adminAction = Convert.ToInt16(Console.ReadLine());
+                if (GameBL.AdminMenuValidator(adminAction))
+                {
+                    switch (adminAction)
+                    {
+                        case 1:
+                            GameBL.LeaderboardClear();
+                            Console.WriteLine("---------------------");
+                            Console.WriteLine("Leaderboards Cleared!");
+                            Console.ReadKey();
+                            AdminMenu(pin);
+                            break;
+                        case 2:
+                            AdminChangePin();
+                            break;
+                        case 3:
+                            AddWord(pin);
+                            break;
+                        case 4:
+                            ShowWords(pin);
+                            break;
+                        case 5:
+                            WelcomePage();
+                            break;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input. Please enter a number between 1 and 5.");
+                }
             }
-            else if (adminAction == 2)
-            {
-                AdminChangePin();
 
-            }
-            else if (adminAction == 3)
-            {
-                AddWord(pin);
-
-            }
-            else if (adminAction == 4)
-            {
-                ShowWords(pin);
-            }
-            else if (adminAction == 5)
-            {
-                WelcomePage();
-                
-            }
-            else
-            {
-                Console.WriteLine("Invalid Choice : Please select 1 - 5");
-                AdminMenu(pin);
-            }
         }
         static void AddWord(int pin)
         {
@@ -132,26 +144,26 @@ namespace Project_1
             GameBL.ChangePIN(pin);
             AdminMenu(pin);
         }
-        static void Player(string ign)
+        static void Player(string username)
         {
 
             Console.WriteLine("---------------------");
-            Console.WriteLine("Welcome to Mekus Mekus Game " + ign);
+            Console.WriteLine("Welcome to Mekus Mekus Game " + username);
             Console.WriteLine("\n[1]Start\n[2]Rules & Mechanics\n[3]Change Username\n[4]Exit");
             Console.Write("\nI will select no. ");
             int playerChoice = Convert.ToInt16(Console.ReadLine());
 
             if (playerChoice == 1)
             {
-                Start(ign);
+                Start(username);
             }
             else if (playerChoice == 2)
             {
-                GameMechanics();
+                GameMechanics(username);
             }
             else if (playerChoice == 3)
             {
-                Username(ign);
+                Username(username);
             }
             else if (playerChoice == 4)
             {
@@ -160,10 +172,10 @@ namespace Project_1
             else
             {
                 Console.WriteLine("\n\nInvalid Choice, Please Select again.\n\n");
-                Player(ign);
+                Player(username);
             }
         }
-        static void GameMechanics()
+        static void GameMechanics(string ign)
         {
             Console.WriteLine("---------------------");
             Console.Write("Rules & Mechanics\n1 - In this game, you'll be given shuffled words to arrange." +
@@ -174,12 +186,22 @@ namespace Project_1
             Console.ReadKey();
             Player(ign);
         }
-        static void Username(string ign)
+        static void Username(string username)
         {
             Console.WriteLine("---------------------");
             Console.Write("Enter your Username : ");
-            ign = Console.ReadLine();
-            Player(ign);
+            string newName = Console.ReadLine();
+            if(newName == "" || newName == username) 
+            {
+                Console.WriteLine("Username unchanged.");
+                Player(username);
+            }
+            else
+            {
+                GameBL.ChangeUsername(newName);
+                Player(GameBL.PlayerUsername());
+            }
+            
         }
         static void Start(string ign)
         {
@@ -221,9 +243,9 @@ namespace Project_1
         static void DisplayFinalScore(string ign)
         {
             Console.WriteLine($"Your Score is: {GameBL.ShowScore()}");
-            Console.Write("\n\nDo you want to try again? (type YES to Continue):");
+            Console.Write("\n\nDo you want to try again? (type Y to Continue):");
             string playAgain = Console.ReadLine().ToUpper();
-            if (playAgain == "YES")
+            if (playAgain == "Y")
             {
                 GameBL.Reset();
                 Start(ign);
