@@ -203,17 +203,17 @@ namespace Project_1
             }
             
         }
-        static void Start(string ign)
+        static void Start(string username)
         {
             Console.WriteLine("---------------------");
-            Console.WriteLine($"{ign}, you have {GameBL.Lives()} tries.");
+            Console.WriteLine($"{username}, you have {GameBL.Lives()} tries.");
 
             for (int i = 0; i < GameBL.questionsList.Count() && GameBL.Lives() > 0; i++)
             {
                 Game(i);
             }
 
-            DisplayFinalScore(ign);
+            DisplayFinalScore(username);
         }
         static void Game(int i)
         {
