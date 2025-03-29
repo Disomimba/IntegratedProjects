@@ -208,7 +208,7 @@ namespace Project_1
             Console.WriteLine("---------------------");
             Console.WriteLine($"{username}, you have {GameBL.Lives()} tries.");
 
-            for (int i = 0; i < GameBL.questionsList.Count() && GameBL.Lives() > 0; i++)
+            for (int i = 0; i <= GameBL.TotalWords() - 1&& GameBL.Lives() > 0; i++)
             {
                 Game(i);
             }
@@ -217,11 +217,11 @@ namespace Project_1
         }
         static void Game(int i)
         {
+            GameBL.RandomizerQuestion();
             Console.WriteLine($"\nShuffled Word no. {i + 1}");
-            Console.WriteLine($"\nArrange the letters\n{GameBL.QuestionsList(i)}\n");
-
+            Console.WriteLine($"\nArrange the letters\n{GameBL.QuestionsList()}\n");
             string answer = Console.ReadLine().ToUpper();
-            if (answer == GameBL.AnswersList(i))
+            if (answer == GameBL.AnswersList())
             {
                 Console.WriteLine("\nCORRECT! : GUESS");
                 Console.WriteLine("---------------------");
@@ -242,7 +242,7 @@ namespace Project_1
         }
         static void DisplayFinalScore(string ign)
         {
-            Console.WriteLine($"Your Score is: {GameBL.ShowScore()}");
+            Console.WriteLine($"Your Score is: {GameBL.ShowScore()} out of {GameBL.TotalWords()}");
             Console.Write("\n\nDo you want to try again? (type Y to Continue):");
             string playAgain = Console.ReadLine().ToUpper();
             if (playAgain == "Y")

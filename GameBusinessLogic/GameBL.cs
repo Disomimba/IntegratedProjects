@@ -6,9 +6,11 @@ public class GameBL
     static int score = 0;
     static int lives = 3;
     static int adminPin = 0000;
+    static int questionShuffler;
     public static string username = "";
     static string[] questions = { "YEES", "NSPI", "SACH", "CEHSS", "HALKC" };
     static string[] answers = { "EYES", "SPIN", "CASH", "CHESS", "CHALK" };
+    public static List<int> givenIndex = new List<int>();
     public static List<string> questionsList = new List<string>(questions);
     public static List<string> answersList = new List<string>(answers);
     public static List<string> scoreList = new List<string>();
@@ -29,23 +31,45 @@ public class GameBL
     {
         return lives;
     }
+    public static int TotalWords()
+    {
+        return questionsList.Count();
+    }
     public static void Reset()
     {
+        givenIndex.RemoveRange(0, TotalWords());
         lives = 3;
         score = 0;
     }
     public static void Leaderboards(string playerUsername, int playerScore)
     {
         scoreList.Add(playerUsername + "\t" + playerScore);
+    }
+    public static void RandomizerQuestion()
+    {
+        Random questionRandom = new Random();
+
+        questionShuffler = questionRandom.Next(TotalWords() );
+
+        if (givenIndex.Contains(questionShuffler))
+        {
+            do
+            {
+                questionShuffler = questionRandom.Next(TotalWords());
+            } 
+            while (givenIndex.Contains(questionShuffler));
+        }
+
+        givenIndex.Add(questionShuffler);
 
     }
-    public static string QuestionsList(int i)
+    public static string QuestionsList()
     {
-        return questionsList[i];
+        return questionsList[questionShuffler];
     }
-    public static string AnswersList(int i)
+    public static string AnswersList()
     {
-        return answersList[i];
+        return answersList[questionShuffler];
     }
     public static void LeaderboardClear()
     {
@@ -94,4 +118,5 @@ public class GameBL
     {
         username = newUsername;
     }
+    
 }
