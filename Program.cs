@@ -110,18 +110,21 @@ namespace Project_1
         static void AddWord(int pin)
         {
             Console.WriteLine("---------------------");
-            string addMore = "";
+            
+            string newArrangedWord = "";
             do
             {
-                Console.Write("Enter The Arranged Word : ");
-                string newArrangedWord = Console.ReadLine().ToUpper();
-                Console.Write("Enter the shuffled word  : ");
-                string newShuffledWord = Console.ReadLine().ToUpper();
-                GameBL.AddShuffledWords(newArrangedWord, newShuffledWord);
-                Console.WriteLine("New shuffled and arranged word added successfully!");
-                Console.Write("Would you like to add another word? (type 'YES' to continue, any other key to exit) : ");
-                addMore = Console.ReadLine().ToUpper();
-            } while (addMore == "YES");
+                Console.Write("Enter a word (or type 'exit' to quit) : ");
+                 newArrangedWord = Console.ReadLine().ToUpper();
+                if (newArrangedWord != "EXIT")
+                {
+                    string newWord = GameBL.Shuffle(newArrangedWord);
+                    GameBL.AddShuffledWords(newArrangedWord, newWord);
+                    Console.WriteLine("New word added successfully!");
+                    Console.WriteLine("---------------------");
+                }
+                
+            } while (newArrangedWord != "EXIT");
             AdminMenu(pin);
         }
         static void ShowWords(int pin)

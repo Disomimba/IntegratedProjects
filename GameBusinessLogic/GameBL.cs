@@ -45,18 +45,36 @@ public class GameBL
     {
         scoreList.Add(playerUsername + "\t" + playerScore);
     }
+    public static string Shuffle(string word)
+    {
+        char[] wordToChar = word.ToCharArray();
+        List<char> lettersChar = new List<char>(wordToChar);
+        Random numberRandom = new Random();
+        string wordShuffled = "";
+
+        while (0 < lettersChar.Count)
+        {
+            int randomIndex = numberRandom.Next(lettersChar.Count);
+            wordShuffled += lettersChar[randomIndex];
+            lettersChar.RemoveAt(randomIndex);
+        }
+
+        return wordShuffled;
+
+    }
+
     public static void RandomizerQuestion()
     {
         Random questionRandom = new Random();
 
-        questionShuffler = questionRandom.Next(TotalWords() );
+        questionShuffler = questionRandom.Next(TotalWords());
 
         if (givenIndex.Contains(questionShuffler))
         {
             do
             {
                 questionShuffler = questionRandom.Next(TotalWords());
-            } 
+            }
             while (givenIndex.Contains(questionShuffler));
         }
 
@@ -88,20 +106,20 @@ public class GameBL
     {
         adminPin = inputtedPin;
     }
-    
+
     public static string ShowQuestionAndAnwers(int i)
     {
         return i + 1 + ". " + questionsList[i] + "\t" + answersList[i];
     }
     public static bool WelcomeMenuValidator(int userActions)
     {
-        if(userActions >= 1 && userActions <= 4 )
+        if (userActions >= 1 && userActions <= 4)
         {
             return true;
         }
         return false;
     }
-    
+
     public static bool AdminMenuValidator(int adminActions)
     {
         if (adminActions >= 1 && adminActions <= 5)
@@ -118,5 +136,5 @@ public class GameBL
     {
         username = newUsername;
     }
-    
+
 }
