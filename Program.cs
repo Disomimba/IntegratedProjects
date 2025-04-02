@@ -1,4 +1,5 @@
 ﻿using GameBusinessLogic;
+using Project_1.GameBusinessLogic;
 using System.Net.NetworkInformation;
 namespace Project_1
 {
@@ -21,8 +22,8 @@ namespace Project_1
                     "[3] Leaderboards\n" +
                     "[4] Exit");
                 Console.Write("Enter Action : ");
-                action = Convert.ToInt16(Console.ReadLine());
-                if (GameBL.WelcomeMenuValidator(action))
+                string? input  = Console.ReadLine();
+                if (int.TryParse(input, out action) && GameBL.WelcomeMenuValidator(action))
                 {
                     switch (action)
                     {
@@ -75,7 +76,7 @@ namespace Project_1
                     "[4] Show Arranged and Shuffled Words\n" +
                     "[5] Exit\nEnter Action : ");
                 int adminAction = Convert.ToInt16(Console.ReadLine());
-                if (GameBL.AdminMenuValidator(adminAction))
+                if (GameBL.MenuValidator(Actions.Admin, adminAction))
                 {
                     switch (adminAction)
                     {
@@ -133,7 +134,7 @@ namespace Project_1
             Console.WriteLine("Shuffled \t Arranged");
             for (int i = 0; i <= GameBL.questionsList.Count() - 1; i++)
             {
-                Console.WriteLine(GameBL.ShowQuestionAndAnwers(i));
+                Console.WriteLine(GameBL.ShowWord(i));
 
             }
             Console.WriteLine("Enter any key to go back.");
@@ -149,33 +150,40 @@ namespace Project_1
         }
         static void Player(string username)
         {
+            while (true)
+            {
+                Console.WriteLine("---------------------");
+                Console.WriteLine("Welcome to Mekus Mekus Game " + username);
+                Console.WriteLine("\n[1]Start\n[2]Rules & Mechanics\n[3]Change Username\n[4]Exit");
+                Console.Write("\nI will select no. ");
+                int playerChoice = Convert.ToInt16(Console.ReadLine());
+                if (GameBL.MenuValidator(Actions.Player, playerChoice))
+                    {
 
-            Console.WriteLine("---------------------");
-            Console.WriteLine("Welcome to Mekus Mekus Game " + username);
-            Console.WriteLine("\n[1]Start\n[2]Rules & Mechanics\n[3]Change Username\n[4]Exit");
-            Console.Write("\nI will select no. ");
-            int playerChoice = Convert.ToInt16(Console.ReadLine());
+                    if (playerChoice == 1)
+                    {
+                        Start(username);
+                    }
+                    else if (playerChoice == 2)
+                    {
+                        GameMechanics(username);
+                    }
+                    else if (playerChoice == 3)
+                    {
+                        Username(username);
+                    }
+                    else if (playerChoice == 4)
+                    {
+                        WelcomePage();
+                    }
+                    
+                }
+                else
+                {
+                    Console.WriteLine("\nInvalid Choice, Please Select between 1 - 4.");
+                    Player(username);
+                }
 
-            if (playerChoice == 1)
-            {
-                Start(username);
-            }
-            else if (playerChoice == 2)
-            {
-                GameMechanics(username);
-            }
-            else if (playerChoice == 3)
-            {
-                Username(username);
-            }
-            else if (playerChoice == 4)
-            {
-                WelcomePage();
-            }
-            else
-            {
-                Console.WriteLine("\n\nInvalid Choice, Please Select again.\n\n");
-                Player(username);
             }
         }
         static void GameMechanics(string ign)
@@ -193,8 +201,8 @@ namespace Project_1
         {
             Console.WriteLine("---------------------");
             Console.Write("Enter your Username : ");
-            string newName = Console.ReadLine();
-            if(newName == "" || newName == username) 
+            string newName = Console.ReadLine()??"".ToUpper();
+            if(string.IsNullOrEmpty(newName) || newName == username) 
             {
                 Console.WriteLine("Username unchanged.");
                 Player(username);
@@ -223,7 +231,7 @@ namespace Project_1
             GameBL.RandomizerQuestion();
             Console.WriteLine($"\nShuffled Word no. {i + 1}");
             Console.WriteLine($"\nArrange the letters\n{GameBL.QuestionsList()}\n");
-            string answer = Console.ReadLine().ToUpper();
+            string answer = Console.ReadLine() ?? "".ToUpper();
             if (answer == GameBL.AnswersList())
             {
                 Console.WriteLine("\nCORRECT! : GUESS");
@@ -243,21 +251,21 @@ namespace Project_1
                 }
             }
         }
-        static void DisplayFinalScore(string ign)
+        static void DisplayFinalScore(string username)
         {
             Console.WriteLine($"Your Score is: {GameBL.ShowScore()} out of {GameBL.TotalWords()}");
             Console.Write("\n\nDo you want to try again? (type Y to Continue):");
-            string playAgain = Console.ReadLine().ToUpper();
+            string playAgain = Console.ReadLine() ?? "".ToUpper();
             if (playAgain == "Y")
             {
                 GameBL.Reset();
-                Start(ign);
+                Start(username);
             }
             else
             {
                 Console.WriteLine("Until next time, word wizard!");
                 Console.ReadKey();
-                GameBL.Leaderboards(ign, GameBL.ShowScore());
+                GameBL.Leaderboards(username, GameBL.ShowScore());
                 GameBL.Reset();
                 WelcomePage();
             }
@@ -266,10 +274,13 @@ namespace Project_1
         {
             Console.WriteLine("---------------------");
             Console.WriteLine("LEADERBOARDS");
-            foreach (var displayScores in GameBL.scoreList)
+
+            foreach (var (score, name) in GameBL.scoreList)
             {
-                Console.WriteLine(displayScores);
+                Console.WriteLine($"{name} \t {score}");
             }
+            
+
             Console.ReadKey();
             WelcomePage();
         }

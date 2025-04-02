@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Project_1.GameBusinessLogic;
+using System;
 namespace GameBusinessLogic;
 
 public class GameBL
@@ -8,12 +9,13 @@ public class GameBL
     static int adminPin = 0000;
     static int questionShuffler;
     public static string username = "";
+    
     static string[] questions = { "YEES", "NSPI", "SACH", "CEHSS", "HALKC" };
     static string[] answers = { "EYES", "SPIN", "CASH", "CHESS", "CHALK" };
     public static List<int> givenIndex = new List<int>();
     public static List<string> questionsList = new List<string>(questions);
     public static List<string> answersList = new List<string>(answers);
-    public static List<string> scoreList = new List<string>();
+    public static List<(int, string)> scoreList = new List<(int, string)>();
     public static int Correct()
     {
         score++;
@@ -37,13 +39,17 @@ public class GameBL
     }
     public static void Reset()
     {
-        givenIndex.RemoveRange(0, TotalWords());
+        givenIndex.Clear();
         lives = 3;
         score = 0;
     }
     public static void Leaderboards(string playerUsername, int playerScore)
     {
-        scoreList.Add(playerUsername + "\t" + playerScore);
+
+        scoreList.Add((playerScore, playerUsername));
+        scoreList.Sort();
+        scoreList.Reverse();
+
     }
     public static string Shuffle(string word)
     {
@@ -62,7 +68,6 @@ public class GameBL
         return wordShuffled;
 
     }
-
     public static void RandomizerQuestion()
     {
         Random questionRandom = new Random();
@@ -79,7 +84,6 @@ public class GameBL
         }
 
         givenIndex.Add(questionShuffler);
-
     }
     public static string QuestionsList()
     {
@@ -106,23 +110,30 @@ public class GameBL
     {
         adminPin = inputtedPin;
     }
-
-    public static string ShowQuestionAndAnwers(int i)
+    public static string ShowWord(int i)
     {
-        return i + 1 + ". " + questionsList[i] + "\t" + answersList[i];
+        return i + 1 + ". " + answersList[i];
+    }
+    public static bool MenuValidator(Actions userAction, int number)
+    {
+        bool result = false;
+        if (userAction == Actions.Welcome && number >= 1 && number <= 4)
+        {
+            result = true;
+        }
+        if(userAction == Actions.Admin && number >= 1 && number <= 5)
+        {
+            result = true;
+        }
+        if (userAction == Actions.Player && number >= 1 && number <= 4)
+        {
+            result = true;
+        }
+        return result;
     }
     public static bool WelcomeMenuValidator(int userActions)
     {
         if (userActions >= 1 && userActions <= 4)
-        {
-            return true;
-        }
-        return false;
-    }
-
-    public static bool AdminMenuValidator(int adminActions)
-    {
-        if (adminActions >= 1 && adminActions <= 5)
         {
             return true;
         }

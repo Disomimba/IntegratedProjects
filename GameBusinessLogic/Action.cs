@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 namespace Project_1.GameBusinessLogic
 {
 
-    public enum Actions{
+    public enum Actions
+    {
+        Welcome,
         Admin,
         Player,
-        Leaderboards,
-        
-}
 
-
+    }
 }
