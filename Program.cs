@@ -1,5 +1,4 @@
-﻿using GameBusinessLogic;
-using Project_1.GameBusinessLogic;
+﻿using ShuffledWordGameBL;
 using System.Net.NetworkInformation;
 namespace Project_1
 {

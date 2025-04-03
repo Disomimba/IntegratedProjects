@@ -9,4 +9,14 @@
     <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="ShuffledWordGameBL\**" />
+    <EmbeddedResource Remove="ShuffledWordGameBL\**" />
+    <None Remove="ShuffledWordGameBL\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="ShuffledWordGameBL\ShuffledWordGameBL.csproj" />
+  </ItemGroup>
+
 </Project>

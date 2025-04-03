@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project_1.GameBusinessLogic
+namespace ShuffledWordGameBL
 {
-
     public enum Actions
     {
         Welcome,
