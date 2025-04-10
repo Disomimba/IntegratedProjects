@@ -1,10 +1,15 @@
 ﻿using ShuffledWordGameBL;
+using ShuffledWordGameDL;
 using System.Net.NetworkInformation;
+using System.Security.Principal;
+using System.Xml.Linq;
 namespace Project_1
 {
     internal class Program
     {
-        static string playersScore = "";
+        static int playersScore = 0;
+        static string password = string.Empty;
+        
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome to Mekus Mekus Game");
@@ -16,8 +21,8 @@ namespace Project_1
             do
             {
                 Console.WriteLine("---------------------");
-                Console.WriteLine("[1] Admin\n" +
-                    "[2] Player\n" +
+                Console.WriteLine("[1] Register\n" +
+                    "[2] Login\n" +
                     "[3] Leaderboards\n" +
                     "[4] Exit");
                 Console.Write("Enter Action : ");
@@ -27,17 +32,16 @@ namespace Project_1
                     switch (action)
                     {
                         case 1:
-                            AdminLogin();
+                            CreateAccount();
                             break;
                         case 2:
-                            Username(GameBL.username);
+                            Login();
                             break;
                         case 3:
-                            Leaderboards(playersScore);
+                            Leaderboards();
                             break;
                         case 4:
                             Console.WriteLine("Until next time, word wizard!");
-                          
                             break;
                     }
                 }
@@ -47,20 +51,57 @@ namespace Project_1
                 }
             } while (action != 4);
         }
-        static void AdminLogin()
+        public static void CreateAccount()
         {
             Console.WriteLine("---------------------");
-            Console.Write("Enter Pin : ");
-            int pin = Convert.ToInt16(Console.ReadLine());
-            if (GameBL.PinValidator(pin))
+            Console.Write("Enter your Name : ");
+            string name  = Console.ReadLine();
+            Console.Write("Enter Username : ");
+            string username = Console.ReadLine().ToUpper();
+            Console.Write("Create Password : ");
+            string password = Console.ReadLine();
+            if(GameBL.CreateAccount(name, username, password))
             {
-                AdminMenu(pin);
+                Console.WriteLine("Account created successfully!");
             }
             else
             {
-                Console.WriteLine("Incorrect Pin!");
-                Console.ReadKey();
-                AdminLogin();
+                Console.WriteLine("Username already exist!");
+            }
+                
+        }
+        static void Login()
+        {
+            string Account = string.Empty;
+            string username = string.Empty;
+            string password = string.Empty;
+            do
+            {
+                Console.WriteLine("---------------------");
+                Console.Write("Username : ");
+                 username = Console.ReadLine().ToUpper();
+                Console.Write("Password : ");
+                 password = Console.ReadLine();
+
+                Account = GameBL.AccountVerifier(username, password);
+                if (Account == "Invalid")
+                {
+                    Console.WriteLine("Invalid Account");
+                }
+                else if (Account == "Admin" || Account == "Player")
+                {
+                    Console.WriteLine("Login Success");
+                }
+            } while (Account == "Invalid");
+            if (Account == "Admin")
+            {
+                int pin = 0000;
+                AdminMenu(pin);
+            }
+            else if (Account == "Player")
+            {
+                string playerName = GameBL.PlayerName(username);
+                Player(playerName);
             }
         }
         static void AdminMenu(int pin)
@@ -80,7 +121,7 @@ namespace Project_1
                     switch (adminAction)
                     {
                         case 1:
-                            GameBL.LeaderboardClear();
+                            //temporary
                             Console.WriteLine("---------------------");
                             Console.WriteLine("Leaderboards Cleared!");
                             Console.ReadKey();
@@ -131,7 +172,7 @@ namespace Project_1
         {
             Console.WriteLine("---------------------");
             Console.WriteLine("Shuffled \t Arranged");
-            for (int i = 0; i <= GameBL.questionsList.Count() - 1; i++)
+            for (int i = 0; i <= GameBL.TotalWords() - 1; i++)
             {
                 Console.WriteLine(GameBL.ShowWord(i));
 
@@ -147,45 +188,48 @@ namespace Project_1
             GameBL.ChangePIN(pin);
             AdminMenu(pin);
         }
-        static void Player(string username)
+        static void Player(string name)
         {
             while (true)
             {
                 Console.WriteLine("---------------------");
-                Console.WriteLine("Welcome to Mekus Mekus Game " + username);
-                Console.WriteLine("\n[1]Start\n[2]Rules & Mechanics\n[3]Change Username\n[4]Exit");
-                Console.Write("\nI will select no. ");
+                Console.WriteLine("Welcome to Mekus Mekus Game " + name);
+                Console.WriteLine("\n[1]Start\n[2]Rules & Mechanics\n[3]Change Password\n[4]History\n[5]Exit");
+                Console.Write("\nEnter Action : ");
                 int playerChoice = Convert.ToInt16(Console.ReadLine());
                 if (GameBL.MenuValidator(Actions.Player, playerChoice))
                     {
 
                     if (playerChoice == 1)
                     {
-                        Start(username);
+                        Start(name);
                     }
                     else if (playerChoice == 2)
                     {
-                        GameMechanics(username);
+                        GameMechanics(name);
                     }
                     else if (playerChoice == 3)
                     {
-                        Username(username);
+                        ChangePassword(name);
                     }
-                    else if (playerChoice == 4)
+                    else if(playerChoice == 4)
+                    {
+                        GameHistory(name);
+                    }
+                    else if (playerChoice == 5)
                     {
                         WelcomePage();
                     }
-                    
                 }
                 else
                 {
-                    Console.WriteLine("\nInvalid Choice, Please Select between 1 - 4.");
-                    Player(username);
+                    Console.WriteLine("\nInvalid Choice, Please Select between 1 - 5.");
+                    Player(name);
                 }
 
             }
         }
-        static void GameMechanics(string ign)
+        static void GameMechanics(string name)
         {
             Console.WriteLine("---------------------");
             Console.Write("Rules & Mechanics\n1 - In this game, you'll be given shuffled words to arrange." +
@@ -194,43 +238,55 @@ namespace Project_1
 
             Console.WriteLine("\nPress any key to go back");
             Console.ReadKey();
-            Player(ign);
+            Player(name);
         }
-        static void Username(string username)
+        static void ChangePassword(string name)
         {
             Console.WriteLine("---------------------");
-            Console.Write("Enter your Username : ");
-            string newName = Console.ReadLine()??"".ToUpper();
-            if(string.IsNullOrEmpty(newName) || newName == username) 
+            Console.WriteLine("You are changing your password.");
+            Console.Write("Enter your old password : ");
+            string oldPass = Console.ReadLine();
+            Console.Write("Enter your new password : ");
+            string newPass = Console.ReadLine();
+
+            string username = GameBL.GetUsername(name);
+            
+            if (ShuffledWordDataLogic.ChangePassword(username, oldPass, newPass))
             {
-                Console.WriteLine("Username unchanged.");
-                Player(username);
+                Console.WriteLine("Change password success.");
             }
             else
             {
-                GameBL.ChangeUsername(newName);
-                Player(GameBL.PlayerUsername());
+                Console.WriteLine("Change password failed.");
             }
-            
         }
-        static void Start(string username)
+        static void GameHistory(string name)
         {
             Console.WriteLine("---------------------");
-            Console.WriteLine($"{username}, you have {GameBL.Lives()} tries.");
+            Console.WriteLine("GAME HISTORY");
+            string user = GameBL.GetUsername(name);
+            Console.WriteLine(GameBL.ShowPlayerHistory(user));
+            Console.WriteLine("\nPress any key to go back");
+            Console.ReadKey();
+        }
+        static void Start(string name)
+        {
+            Console.WriteLine("---------------------");
+            Console.WriteLine($"{name}, you have {GameBL.Lives()} tries.");
 
             for (int i = 0; i <= GameBL.TotalWords() - 1&& GameBL.Lives() > 0; i++)
             {
                 Game(i);
             }
 
-            DisplayFinalScore(username);
+            DisplayFinalScore(name);
         }
         static void Game(int i)
         {
             GameBL.RandomizerQuestion();
             Console.WriteLine($"\nShuffled Word no. {i + 1}");
             Console.WriteLine($"\nArrange the letters\n{GameBL.QuestionsList()}\n");
-            string answer = Console.ReadLine() ?? "".ToUpper();
+            string answer = Console.ReadLine().ToUpper();
             if (answer == GameBL.AnswersList())
             {
                 Console.WriteLine("\nCORRECT! : GUESS");
@@ -250,36 +306,29 @@ namespace Project_1
                 }
             }
         }
-        static void DisplayFinalScore(string username)
+        static void DisplayFinalScore(string name)
         {
             Console.WriteLine($"Your Score is: {GameBL.ShowScore()} out of {GameBL.TotalWords()}");
             Console.Write("\n\nDo you want to try again? (type Y to Continue):");
-            string playAgain = Console.ReadLine() ?? "".ToUpper();
+            string playAgain = Console.ReadLine().ToUpper();
             if (playAgain == "Y")
             {
                 GameBL.Reset();
-                Start(username);
+                Start(name);
             }
             else
             {
                 Console.WriteLine("Until next time, word wizard!");
                 Console.ReadKey();
-                GameBL.Leaderboards(username, GameBL.ShowScore());
+                GameBL.UpdatePlayerHistory(name, GameBL.ShowScore());
                 GameBL.Reset();
-                WelcomePage();
             }
         }
-        static void Leaderboards(string scores)
+        static void Leaderboards()
         {
             Console.WriteLine("---------------------");
             Console.WriteLine("LEADERBOARDS");
-
-            foreach (var (score, name) in GameBL.scoreList)
-            {
-                Console.WriteLine($"{name} \t {score}");
-            }
-            
-
+            Console.WriteLine(GameBL.DisplayLeaderboard());
             Console.ReadKey();
             WelcomePage();
         }

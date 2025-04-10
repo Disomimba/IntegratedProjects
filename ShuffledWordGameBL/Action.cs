@@ -11,6 +11,7 @@ namespace ShuffledWordGameBL
         Welcome,
         Admin,
         Player,
+        Invalid
 
     }
 }

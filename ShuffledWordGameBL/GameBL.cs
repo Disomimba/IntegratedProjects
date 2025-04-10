@@ -1,4 +1,7 @@
-﻿namespace ShuffledWordGameBL
+﻿using ShuffledWordGameDL;
+using static System.Formats.Asn1.AsnWriter;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+namespace ShuffledWordGameBL
 {
     public class GameBL
     {
@@ -6,14 +9,13 @@
         static int lives = 3;
         static int adminPin = 0000;
         static int questionShuffler;
-        public static string username = "";
+        static string username = "";
 
         static string[] questions = { "YEES", "NSPI", "SACH", "CEHSS", "HALKC" };
         static string[] answers = { "EYES", "SPIN", "CASH", "CHESS", "CHALK" };
-        public static List<int> givenIndex = new List<int>();
-        public static List<string> questionsList = new List<string>(questions);
-        public static List<string> answersList = new List<string>(answers);
-        public static List<(int, string)> scoreList = new List<(int, string)>();
+        static List<int> givenIndex = new List<int>();
+        static List<string> questionsList = new List<string>(questions);
+        static List<string> answersList = new List<string>(answers);
         public static int Correct()
         {
             score++;
@@ -40,14 +42,6 @@
             givenIndex.Clear();
             lives = 3;
             score = 0;
-        }
-        public static void Leaderboards(string playerUsername, int playerScore)
-        {
-
-            scoreList.Add((playerScore, playerUsername));
-            scoreList.Sort();
-            scoreList.Reverse();
-
         }
         public static string Shuffle(string word)
         {
@@ -91,18 +85,10 @@
         {
             return answersList[questionShuffler];
         }
-        public static void LeaderboardClear()
-        {
-            scoreList.Clear();
-        }
         public static void AddShuffledWords(string newAnswer, string newShuffled)
         {
             answersList.Add(newAnswer);
             questionsList.Add(newShuffled);
-        }
-        public static bool PinValidator(int inputtedPin)
-        {
-            return adminPin == inputtedPin;
         }
         public static void ChangePIN(int inputtedPin)
         {
@@ -115,7 +101,7 @@
         public static bool MenuValidator(Actions userAction, int number)
         {
             bool result = false;
-            if (userAction == Actions.Welcome && number >= 1 && number <= 4)
+            if (userAction == Actions.Welcome && number >= 1 && number <= 5)
             {
                 result = true;
             }
@@ -123,7 +109,7 @@
             {
                 result = true;
             }
-            if (userAction == Actions.Player && number >= 1 && number <= 4)
+            if (userAction == Actions.Player && number >= 1 && number <= 5)
             {
                 result = true;
             }
@@ -137,15 +123,49 @@
             }
             return false;
         }
-        public static string PlayerUsername()
+        public static string AccountVerifier(string Username, string Pass)
         {
-            return username;
-        }
-        public static void ChangeUsername(string newUsername)
-        {
-            username = newUsername;
-        }
+            string Account = "Invalid";
+            if (ShuffledWordDataLogic.VerifyAdminAccount(Username, Pass))
+            {
+                return Account = "Admin";
+            }
+            else if (ShuffledWordDataLogic.VerifyAccount(Username, Pass))
+            {
+                return Account = "Player";
+            }
 
+            return Account;
+        }
+        public static string PlayerName(string Username)
+        {
+            return ShuffledWordDataLogic.GetPlayerName(Username);
+        }
+        public static string GetUsername(string name)
+        {
+            return ShuffledWordDataLogic.GetUsername(name);
+        }
+        public static void UpdatePlayerHistory(string name, int score)
+        {
+            int error = 3 - Lives();
+            string scores = score.ToString();
+            string user = ShuffledWordDataLogic.GetUsername(name);
+            ShuffledWordDataLogic.Score(user, score);
+            ShuffledWordDataLogic.GameHistoryAdd(user, scores, error);
+        }
+        public static string ShowPlayerHistory(string user)
+        {
+            return ShuffledWordDataLogic.PlayerHistory(user);
+        }
+        public static bool CreateAccount(string name, string username, string password)
+        {
+            return ShuffledWordDataLogic.CreateAccount(name, username, password);
+        }
+        public static string DisplayLeaderboard()
+        {
+            return ShuffledWordDataLogic.DisplayLeaderboard();
+        }
+        
     }
 
 }

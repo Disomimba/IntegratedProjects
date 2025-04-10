@@ -11,12 +11,19 @@
 
   <ItemGroup>
     <Compile Remove="ShuffledWordGameBL\**" />
+    <Compile Remove="ShuffledWordGameDL\**" />
+    <Compile Remove="ShuffleGameCommon\**" />
     <EmbeddedResource Remove="ShuffledWordGameBL\**" />
+    <EmbeddedResource Remove="ShuffledWordGameDL\**" />
+    <EmbeddedResource Remove="ShuffleGameCommon\**" />
     <None Remove="ShuffledWordGameBL\**" />
+    <None Remove="ShuffledWordGameDL\**" />
+    <None Remove="ShuffleGameCommon\**" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="ShuffledWordGameBL\ShuffledWordGameBL.csproj" />
+    <ProjectReference Include="ShuffledWordGameDL\ShuffledWordGameDL.csproj" />
   </ItemGroup>
 
 </Project>
