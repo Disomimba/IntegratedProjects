@@ -54,21 +54,23 @@ namespace Project_1
         public static void CreateAccount()
         {
             Console.WriteLine("---------------------");
-            Console.Write("Enter your Name : ");
-            string name  = Console.ReadLine();
-            Console.Write("Enter Username : ");
+            Console.WriteLine("Username must be greater than 4 characters.\nPassword must be greater than or equal to 8 characters.");
+            Console.WriteLine("---------------------");
+            Console.Write("Enter your Name: ");
+            string name = Console.ReadLine();
+            Console.Write("Enter Username: ");
             string username = Console.ReadLine().ToUpper();
-            Console.Write("Create Password : ");
+            Console.Write("Create Password: ");
             string password = Console.ReadLine();
-            if(GameBL.CreateAccount(name, username, password))
+
+            if (GameBL.CreateAccount(name, username, password))
             {
                 Console.WriteLine("Account created successfully!");
             }
             else
             {
-                Console.WriteLine("Username already exist!");
+                Console.WriteLine("Account creation failed. \nPlease ensure your username and password meet the requirements\nUername already exist.");
             }
-                
         }
         static void Login()
         {
@@ -124,11 +126,12 @@ namespace Project_1
                             //temporary
                             Console.WriteLine("---------------------");
                             Console.WriteLine("Leaderboards Cleared!");
+                            GameBL.ClearLeaderboard();
                             Console.ReadKey();
                             AdminMenu(pin);
                             break;
                         case 2:
-                            AdminChangePin();
+                            AdminChangePin(pin);
                             break;
                         case 3:
                             AddWord(pin);
@@ -148,6 +151,12 @@ namespace Project_1
             }
 
         }
+        static void AdminChangePin(int pin)
+        {
+            Console.WriteLine("Coming soon");
+            Console.ReadKey();
+            AdminMenu(pin);
+        }
         static void AddWord(int pin)
         {
             Console.WriteLine("---------------------");
@@ -159,8 +168,8 @@ namespace Project_1
                  newArrangedWord = Console.ReadLine().ToUpper();
                 if (newArrangedWord != "EXIT")
                 {
-                    string newWord = GameBL.Shuffle(newArrangedWord);
-                    GameBL.AddShuffledWords(newArrangedWord, newWord);
+                    string ShuffledWord = GameBL.Shuffle(newArrangedWord);
+                    GameBL.AddShuffledWords(newArrangedWord, ShuffledWord);
                     Console.WriteLine("New word added successfully!");
                     Console.WriteLine("---------------------");
                 }
@@ -171,7 +180,7 @@ namespace Project_1
         static void ShowWords(int pin)
         {
             Console.WriteLine("---------------------");
-            Console.WriteLine("Shuffled \t Arranged");
+            Console.WriteLine("Words");
             for (int i = 0; i <= GameBL.TotalWords() - 1; i++)
             {
                 Console.WriteLine(GameBL.ShowWord(i));
@@ -179,13 +188,6 @@ namespace Project_1
             }
             Console.WriteLine("Enter any key to go back.");
             Console.ReadKey();
-            AdminMenu(pin);
-        }
-        static void AdminChangePin()
-        {
-            Console.Write("Enter your new pin : ");
-            int pin = Convert.ToInt16(Console.ReadLine());
-            GameBL.ChangePIN(pin);
             AdminMenu(pin);
         }
         static void Player(string name)

@@ -7,9 +7,7 @@ namespace ShuffledWordGameBL
     {
         static int score = 0;
         static int lives = 3;
-        static int adminPin = 0000;
         static int questionShuffler;
-        static string username = "";
 
         static string[] questions = { "YEES", "NSPI", "SACH", "CEHSS", "HALKC" };
         static string[] answers = { "EYES", "SPIN", "CASH", "CHESS", "CHALK" };
@@ -90,10 +88,6 @@ namespace ShuffledWordGameBL
             answersList.Add(newAnswer);
             questionsList.Add(newShuffled);
         }
-        public static void ChangePIN(int inputtedPin)
-        {
-            adminPin = inputtedPin;
-        }
         public static string ShowWord(int i)
         {
             return i + 1 + ". " + answersList[i];
@@ -165,7 +159,10 @@ namespace ShuffledWordGameBL
         {
             return ShuffledWordDataLogic.DisplayLeaderboard();
         }
-        
+        public static void ClearLeaderboard()
+        {
+            ShuffledWordDataLogic.ClearLeaderboards();
+        }
     }
 
 }

@@ -18,9 +18,9 @@ namespace ShuffledWordGameDL
         {
             Accounts.Add(new GameAccounts
             {
-                Name = "SHORK",
+                Name = "Abdul Malik",
                 Username = "SHORK",
-                Password = "123"
+                Password = "shork123"
             });
         }
         static bool VerifyAccountExist(string username)
@@ -36,7 +36,7 @@ namespace ShuffledWordGameDL
         }
         public static bool CreateAccount(string name, string username, string password)
         {
-            if (!VerifyAccountExist(username))
+            if (!VerifyAccountExist(username) && username.Length >= 4 && password.Length >= 8)
             {
                 Accounts.Add(new GameAccounts
                 {
@@ -77,7 +77,7 @@ namespace ShuffledWordGameDL
         }
         public static bool VerifyAdminAccount(string user, string pass)
         {
-            if (user == "ADMIN" && pass == "0000")
+            if (user == "ADMIN" && pass == "admin123")
             {
                 return true;
             }
@@ -160,7 +160,24 @@ namespace ShuffledWordGameDL
                         Username = username
                     });
                 }
+                BubbleSort(playerLeaderboards.Count());
                 
+
+            }
+        }
+        static void BubbleSort(int size)
+        {
+            for (int i = 0; i < size - 1; i++)
+            {
+                for (int j = 0; j < size - 1 - i; j++)
+                {
+                    if (playerLeaderboards[j].Score < playerLeaderboards[j + 1].Score)
+                    {
+                        var temp = playerLeaderboards[j];
+                        playerLeaderboards[j] = playerLeaderboards[j + 1];
+                        playerLeaderboards[j + 1] = temp;
+                    }
+                }
             }
         }
         public static string DisplayLeaderboard()
@@ -202,6 +219,10 @@ namespace ShuffledWordGameDL
                     account.Score.Reverse();
                 }
             }
+        }
+        public static void ClearLeaderboards()
+        {
+            playerLeaderboards.Clear();
         }
     }
 }

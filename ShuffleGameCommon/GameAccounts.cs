@@ -8,8 +8,30 @@ namespace ShuffledWordGameCommon
 {
     public class GameAccounts
     {
-        public string Password { get; set; }
-        public string Username { get; set; }
+        private string username;
+        private string password;
+        public string Username
+        {
+            get { return username; }
+            set
+            {
+                if (value.Length >= 4)
+                {
+                    username = value;
+                }
+            }
+        }
+        public string Password
+        {
+            get { return password; }
+            set
+            {
+                if (value.Length >= 8 )
+                {
+                    password = value;
+                }
+            }
+        }
         public string Name { get; set; }
         public List<int> Score { get; set; }
         public List<string> History { get; set; }
