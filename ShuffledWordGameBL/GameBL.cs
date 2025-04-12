@@ -8,6 +8,7 @@ namespace ShuffledWordGameBL
         static int score = 0;
         static int lives = 3;
         static int questionShuffler;
+        static ShuffledWordDataLogic DataLogic = new ShuffledWordDataLogic();
 
         static string[] questions = { "YEES", "NSPI", "SACH", "CEHSS", "HALKC" };
         static string[] answers = { "EYES", "SPIN", "CASH", "CHESS", "CHALK" };
@@ -117,51 +118,55 @@ namespace ShuffledWordGameBL
             }
             return false;
         }
-        public static string AccountVerifier(string Username, string Pass)
+        public string AccountVerifier(string Username, string Pass)
         {
             string Account = "Invalid";
-            if (ShuffledWordDataLogic.VerifyAdminAccount(Username, Pass))
+            if (DataLogic.VerifyAdminAccount(Username, Pass))
             {
                 return Account = "Admin";
             }
-            else if (ShuffledWordDataLogic.VerifyAccount(Username, Pass))
+            else if (DataLogic.VerifyAccount(Username, Pass))
             {
                 return Account = "Player";
             }
 
             return Account;
         }
-        public static string PlayerName(string Username)
+        public string PlayerName(string Username)
         {
-            return ShuffledWordDataLogic.GetPlayerName(Username);
+            return DataLogic.GetPlayerName(Username);
         }
-        public static string GetUsername(string name)
+        public string GetUsername(string name)
         {
-            return ShuffledWordDataLogic.GetUsername(name);
+            return DataLogic.GetUsername(name);
         }
-        public static void UpdatePlayerHistory(string name, int score)
+        public void UpdatePlayerHistory(string name, int score)
         {
             int error = 3 - Lives();
             string scores = score.ToString();
-            string user = ShuffledWordDataLogic.GetUsername(name);
-            ShuffledWordDataLogic.Score(user, score);
-            ShuffledWordDataLogic.GameHistoryAdd(user, scores, error);
+            string user = DataLogic.GetUsername(name);
+            DataLogic.Score(user, score);
+            DataLogic.GameHistoryAdd(user, scores, error);
         }
-        public static string ShowPlayerHistory(string user)
+        public string ShowPlayerHistory(string user)
         {
-            return ShuffledWordDataLogic.PlayerHistory(user);
+            return DataLogic.PlayerHistory(user);
         }
-        public static bool CreateAccount(string name, string username, string password)
+        public bool CreateAccount(string name, string username, string password)
         {
-            return ShuffledWordDataLogic.CreateAccount(name, username, password);
+            return DataLogic.CreateAccount(name, username, password);
         }
-        public static string DisplayLeaderboard()
+        public string DisplayLeaderboard()
         {
-            return ShuffledWordDataLogic.DisplayLeaderboard();
+            return DataLogic.DisplayLeaderboard();
         }
-        public static void ClearLeaderboard()
+        public void ClearLeaderboard()
         {
-            ShuffledWordDataLogic.ClearLeaderboards();
+            DataLogic.ClearLeaderboards();
+        }
+        public bool ChangePassword(string username, string oldPassword, string newPassword)
+        {
+            return DataLogic.ChangePassword(username, oldPassword, newPassword);
         }
     }
 

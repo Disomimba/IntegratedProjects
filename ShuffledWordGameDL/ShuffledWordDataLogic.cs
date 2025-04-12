@@ -23,7 +23,7 @@ namespace ShuffledWordGameDL
                 Password = "shork123"
             });
         }
-        static bool VerifyAccountExist(string username)
+        bool VerifyAccountExist(string username)
         {
             foreach (var account in Accounts)
             {
@@ -34,7 +34,7 @@ namespace ShuffledWordGameDL
             }
             return false;
         }
-        public static bool CreateAccount(string name, string username, string password)
+        public bool CreateAccount(string name, string username, string password)
         {
             if (!VerifyAccountExist(username) && username.Length >= 4 && password.Length >= 8)
             {
@@ -48,7 +48,7 @@ namespace ShuffledWordGameDL
             }
             return false;
         }
-        public static bool VerifyAccount(string user, string pass)
+        public bool VerifyAccount(string user, string pass)
         {
             foreach (var account in Accounts)
             {
@@ -59,7 +59,7 @@ namespace ShuffledWordGameDL
             }
             return false;
         }
-        public static bool ChangePassword(string username, string oldPassword, string newPassword)
+        public bool ChangePassword(string username, string oldPassword, string newPassword)
         {
             foreach (var account in Accounts)
             {
@@ -75,7 +75,7 @@ namespace ShuffledWordGameDL
 
             return false;
         }
-        public static bool VerifyAdminAccount(string user, string pass)
+        public bool VerifyAdminAccount(string user, string pass)
         {
             if (user == "ADMIN" && pass == "admin123")
             {
@@ -83,7 +83,7 @@ namespace ShuffledWordGameDL
             }
             return false;
         }
-        public static string GetPlayerName(string user)
+        public string GetPlayerName(string user)
         {
             foreach (var account in Accounts)
             {
@@ -94,7 +94,7 @@ namespace ShuffledWordGameDL
             }
             return null;
         }
-        public static string GetUsername(string name)
+        public string GetUsername(string name)
         {
             foreach (var account in Accounts)
             {
@@ -106,7 +106,7 @@ namespace ShuffledWordGameDL
             }
             return null;
         }
-        public static void GameHistoryAdd(string username, string score, int lives)
+        public  void GameHistoryAdd(string username, string score, int lives)
         {
             foreach (var account in Accounts)
             {
@@ -117,7 +117,7 @@ namespace ShuffledWordGameDL
                 }
             }
         }
-        public static int FindPlayerHighScore(string username)
+        public  int FindPlayerHighScore(string username)
         {
             int playerHighScore = 0;
             foreach (var account in Accounts)
@@ -132,7 +132,7 @@ namespace ShuffledWordGameDL
             }
             return playerHighScore;
         }
-        public static void HighScores(string username, int score)
+        public void HighScores(string username, int score)
         {
             if (score > 0)
             {
@@ -180,7 +180,7 @@ namespace ShuffledWordGameDL
                 }
             }
         }
-        public static string DisplayLeaderboard()
+        public string DisplayLeaderboard()
         {
             string username_scores = string.Empty;
 
@@ -191,7 +191,7 @@ namespace ShuffledWordGameDL
 
             return username_scores;
         }
-        public static string PlayerHistory(string username)
+        public string PlayerHistory(string username)
         {
             foreach (var account in Accounts)
             {
@@ -208,7 +208,7 @@ namespace ShuffledWordGameDL
             }
             return "NOTHING";
         }
-        public static void Score(string username, int score)
+        public void Score(string username, int score)
         {
             foreach (var account in Accounts)
             {
@@ -220,7 +220,7 @@ namespace ShuffledWordGameDL
                 }
             }
         }
-        public static void ClearLeaderboards()
+        public void ClearLeaderboards()
         {
             playerLeaderboards.Clear();
         }

@@ -7,6 +7,7 @@ namespace Project_1
 {
     internal class Program
     {
+        static GameBL BusinessLogic = new GameBL();
         static int playersScore = 0;
         static string password = string.Empty;
         
@@ -54,7 +55,7 @@ namespace Project_1
         public static void CreateAccount()
         {
             Console.WriteLine("---------------------");
-            Console.WriteLine("Username must be greater than 4 characters.\nPassword must be greater than or equal to 8 characters.");
+            Console.WriteLine("Username must be greater than or equal to 4 characters.\nPassword must be greater than or equal to 8 characters.");
             Console.WriteLine("---------------------");
             Console.Write("Enter your Name: ");
             string name = Console.ReadLine();
@@ -63,13 +64,14 @@ namespace Project_1
             Console.Write("Create Password: ");
             string password = Console.ReadLine();
 
-            if (GameBL.CreateAccount(name, username, password))
+            if (BusinessLogic.CreateAccount(name, username, password))
             {
                 Console.WriteLine("Account created successfully!");
             }
             else
             {
-                Console.WriteLine("Account creation failed. \nPlease ensure your username and password meet the requirements\nUername already exist.");
+                Console.WriteLine("---------------------");
+                Console.WriteLine("Account creation failed. \nUername already exist or your username and password doesn't meet the requirements");
             }
         }
         static void Login()
@@ -85,7 +87,7 @@ namespace Project_1
                 Console.Write("Password : ");
                  password = Console.ReadLine();
 
-                Account = GameBL.AccountVerifier(username, password);
+                Account = BusinessLogic.AccountVerifier(username, password);
                 if (Account == "Invalid")
                 {
                     Console.WriteLine("Invalid Account");
@@ -102,7 +104,7 @@ namespace Project_1
             }
             else if (Account == "Player")
             {
-                string playerName = GameBL.PlayerName(username);
+                string playerName = BusinessLogic.PlayerName(username);
                 Player(playerName);
             }
         }
@@ -126,7 +128,7 @@ namespace Project_1
                             //temporary
                             Console.WriteLine("---------------------");
                             Console.WriteLine("Leaderboards Cleared!");
-                            GameBL.ClearLeaderboard();
+                            BusinessLogic.ClearLeaderboard();
                             Console.ReadKey();
                             AdminMenu(pin);
                             break;
@@ -251,9 +253,9 @@ namespace Project_1
             Console.Write("Enter your new password : ");
             string newPass = Console.ReadLine();
 
-            string username = GameBL.GetUsername(name);
+            string username = BusinessLogic.GetUsername(name);
             
-            if (ShuffledWordDataLogic.ChangePassword(username, oldPass, newPass))
+            if (BusinessLogic.ChangePassword(username, oldPass, newPass))
             {
                 Console.WriteLine("Change password success.");
             }
@@ -266,8 +268,8 @@ namespace Project_1
         {
             Console.WriteLine("---------------------");
             Console.WriteLine("GAME HISTORY");
-            string user = GameBL.GetUsername(name);
-            Console.WriteLine(GameBL.ShowPlayerHistory(user));
+            string user = BusinessLogic.GetUsername(name);
+            Console.WriteLine(BusinessLogic.ShowPlayerHistory(user));
             Console.WriteLine("\nPress any key to go back");
             Console.ReadKey();
         }
@@ -322,7 +324,7 @@ namespace Project_1
             {
                 Console.WriteLine("Until next time, word wizard!");
                 Console.ReadKey();
-                GameBL.UpdatePlayerHistory(name, GameBL.ShowScore());
+                BusinessLogic.UpdatePlayerHistory(name, GameBL.ShowScore());
                 GameBL.Reset();
             }
         }
@@ -330,7 +332,7 @@ namespace Project_1
         {
             Console.WriteLine("---------------------");
             Console.WriteLine("LEADERBOARDS");
-            Console.WriteLine(GameBL.DisplayLeaderboard());
+            Console.WriteLine(BusinessLogic.DisplayLeaderboard());
             Console.ReadKey();
             WelcomePage();
         }
