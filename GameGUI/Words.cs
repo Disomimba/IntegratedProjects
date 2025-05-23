@@ -63,7 +63,7 @@ namespace GameGUI
             if (listBox_words.SelectedIndex != -1)
             {
                 int index = listBox_words.SelectedIndex;
-                BusinessLogic.removeWords(index);
+                BusinessLogic.RemoveWords(index);
                 listBox_words.Items.Clear();
                 ShowWords();
                 txt_word.Text = "";
