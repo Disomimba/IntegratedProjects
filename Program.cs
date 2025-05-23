@@ -10,11 +10,13 @@ namespace Project_1
         static GameBL BusinessLogic = new GameBL();
         static int playersScore = 0;
         static string password = string.Empty;
-        
+
         static void Main(string[] args)
         {
+            File.Create("accounts.json");
             Console.WriteLine("Welcome to Mekus Mekus Game");
             WelcomePage();
+            BusinessLogic.GetAccounts();
         }
         static void WelcomePage()
         {
@@ -27,7 +29,7 @@ namespace Project_1
                     "[3] Leaderboards\n" +
                     "[4] Exit");
                 Console.Write("Enter Action : ");
-                string? input  = Console.ReadLine();
+                string? input = Console.ReadLine();
                 if (int.TryParse(input, out action) && GameBL.WelcomeMenuValidator(action))
                 {
                     switch (action)
@@ -83,9 +85,9 @@ namespace Project_1
             {
                 Console.WriteLine("---------------------");
                 Console.Write("Username : ");
-                 username = Console.ReadLine().ToUpper();
+                username = Console.ReadLine().ToUpper();
                 Console.Write("Password : ");
-                 password = Console.ReadLine();
+                password = Console.ReadLine();
 
                 Account = BusinessLogic.AccountVerifier(username, password);
                 if (Account == "Invalid")
@@ -115,9 +117,9 @@ namespace Project_1
                 Console.WriteLine("---------------------");
                 Console.Write("Correct Pin!\n" +
                     "[1] Clear Leaderboards\n" +
-                    "[2] Change Pin\n" +
-                    "[3] Add Word\n" +
-                    "[4] Show Arranged and Shuffled Words\n" +
+                    "[2] Add Word\n" +
+                    "[3] Show Arranged and Shuffled Words\n" +
+                    "[4] Remove Word" +
                     "[5] Exit\nEnter Action : ");
                 int adminAction = Convert.ToInt16(Console.ReadLine());
                 if (GameBL.MenuValidator(Actions.Admin, adminAction))
@@ -125,7 +127,6 @@ namespace Project_1
                     switch (adminAction)
                     {
                         case 1:
-                            //temporary
                             Console.WriteLine("---------------------");
                             Console.WriteLine("Leaderboards Cleared!");
                             BusinessLogic.ClearLeaderboard();
@@ -133,17 +134,18 @@ namespace Project_1
                             AdminMenu(pin);
                             break;
                         case 2:
-                            AdminChangePin(pin);
-                            break;
-                        case 3:
                             AddWord(pin);
                             break;
-                        case 4:
+                        case 3:
                             ShowWords(pin);
+                            break;
+                        case 4:
+                            RemoveWords(pin);
                             break;
                         case 5:
                             WelcomePage();
                             break;
+
                     }
                 }
                 else
@@ -153,21 +155,37 @@ namespace Project_1
             }
 
         }
-        static void AdminChangePin(int pin)
+        public static void RemoveWords(int pin)
         {
-            Console.WriteLine("Coming soon");
-            Console.ReadKey();
+            Console.WriteLine("---------------------");
+
+            Console.WriteLine("Words");
+            for (int i = 0; i <= GameBL.TotalWords() - 1; i++)
+            {
+                Console.WriteLine(GameBL.ShowWord(i));
+            }
+            Console.Write("Enter the number you want to remove : ");
+            int wordToRemove = Convert.ToInt16(Console.ReadLine());
+            wordToRemove--;
+            if (BusinessLogic.RemoveWords(wordToRemove))
+            {
+                Console.WriteLine("Word removed successfully!");
+            }
+            else
+            {
+                Console.WriteLine("Index out of Bounds.");
+            }
             AdminMenu(pin);
         }
         static void AddWord(int pin)
         {
             Console.WriteLine("---------------------");
-            
+
             string newArrangedWord = "";
             do
             {
                 Console.Write("Enter a word (or type 'exit' to quit) : ");
-                 newArrangedWord = Console.ReadLine().ToUpper();
+                newArrangedWord = Console.ReadLine().ToUpper();
                 if (newArrangedWord != "EXIT")
                 {
                     string ShuffledWord = GameBL.Shuffle(newArrangedWord);
@@ -175,7 +193,7 @@ namespace Project_1
                     Console.WriteLine("New word added successfully!");
                     Console.WriteLine("---------------------");
                 }
-                
+
             } while (newArrangedWord != "EXIT");
             AdminMenu(pin);
         }
@@ -202,7 +220,7 @@ namespace Project_1
                 Console.Write("\nEnter Action : ");
                 int playerChoice = Convert.ToInt16(Console.ReadLine());
                 if (GameBL.MenuValidator(Actions.Player, playerChoice))
-                    {
+                {
 
                     if (playerChoice == 1)
                     {
@@ -216,7 +234,7 @@ namespace Project_1
                     {
                         ChangePassword(name);
                     }
-                    else if(playerChoice == 4)
+                    else if (playerChoice == 4)
                     {
                         GameHistory(name);
                     }
@@ -253,8 +271,8 @@ namespace Project_1
             Console.Write("Enter your new password : ");
             string newPass = Console.ReadLine();
 
-            string username = BusinessLogic.GetUsername(name);
-            
+            string username = BusinessLogic.GetPlayerUsername(name);
+
             if (BusinessLogic.ChangePassword(username, oldPass, newPass))
             {
                 Console.WriteLine("Change password success.");
@@ -268,7 +286,7 @@ namespace Project_1
         {
             Console.WriteLine("---------------------");
             Console.WriteLine("GAME HISTORY");
-            string user = BusinessLogic.GetUsername(name);
+            string user = BusinessLogic.GetPlayerUsername(name);
             Console.WriteLine(BusinessLogic.ShowPlayerHistory(user));
             Console.WriteLine("\nPress any key to go back");
             Console.ReadKey();
@@ -278,7 +296,7 @@ namespace Project_1
             Console.WriteLine("---------------------");
             Console.WriteLine($"{name}, you have {GameBL.Lives()} tries.");
 
-            for (int i = 0; i <= GameBL.TotalWords() - 1&& GameBL.Lives() > 0; i++)
+            for (int i = 0; i <= GameBL.TotalWords() - 1 && GameBL.Lives() > 0; i++)
             {
                 Game(i);
             }
@@ -324,7 +342,7 @@ namespace Project_1
             {
                 Console.WriteLine("Until next time, word wizard!");
                 Console.ReadKey();
-                BusinessLogic.UpdatePlayerHistory(name, GameBL.ShowScore());
+                BusinessLogic.UpdatePlayerHistory(name);
                 GameBL.Reset();
             }
         }
