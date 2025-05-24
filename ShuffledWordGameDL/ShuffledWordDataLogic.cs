@@ -18,9 +18,10 @@
 
             public ShuffledWordDataLogic()
             {
-                //interfaceDataLogic = new InMemoryData();
-                interfaceDataLogic = new InJsonData();
-                //interfaceDataLogic = new InTextData();
+            //interfaceDataLogic = new InMemoryData();
+            //interfaceDataLogic = new InJsonData();
+            //interfaceDataLogic = new InTextData();
+            interfaceDataLogic = new InDataBase();
             
 
             }
