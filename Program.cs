@@ -16,7 +16,7 @@ namespace Project_1
             File.Create("accounts.json");
             Console.WriteLine("Welcome to Mekus Mekus Game");
             WelcomePage();
-            //BusinessLogic.GetAccounts();
+            BusinessLogic.GetAccounts();
         }
         static void WelcomePage()
         {
