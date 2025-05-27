@@ -1,4 +1,5 @@
-﻿using ShuffledWordGameCommon;
+﻿using Microsoft.Data.SqlClient;
+using ShuffledWordGameCommon;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,39 @@ namespace ShuffledWordGameDL
     {
         public List<GameAccounts> account = new List<GameAccounts>();
         public List<Leaderboards> leaderboards = new List<Leaderboards>();
-        public List<GameAccounts> Accounts()
+        public List<AdminData> admin = new List<AdminData>();
+        public InMemoryData()
+        {
+            admin.Add(new AdminData
+            {
+                Username = "ADMIN",
+                Password = "admin123"
+            });
+            string[] defaultWords = { "CASH", "EAGLE", "BRIGHT", "BOUGHT", "SARCASM" };
+            foreach (var word in defaultWords)
+            {
+                admin[0].ArrangedWord.Add(word);
+                Shuffle(word);
+            }
+        }
+        public void Shuffle(string word)
+        {
+            char[] wordToChar = word.ToCharArray();
+            List<char> lettersChar = new List<char>(wordToChar);
+            Random numberRandom = new Random();
+            string wordShuffled = "";
+
+            while (0 < lettersChar.Count)
+            {
+                int randomIndex = numberRandom.Next(lettersChar.Count);
+                wordShuffled += lettersChar[randomIndex];
+                lettersChar.RemoveAt(randomIndex);
+            }
+
+            admin[0].ShuffledWord.Add(wordShuffled);
+
+        }
+        public List<GameAccounts> GetPlayerAccounts()
         {
             return account;
         }
@@ -34,7 +67,7 @@ namespace ShuffledWordGameDL
                     {
                         accounts.Password = new_password;
                         return true;
-                        
+
                     }
                 }
             }
@@ -73,7 +106,6 @@ namespace ShuffledWordGameDL
             if (score > 0)
             {
                 bool playerExists = false;
-                int existingScore = 0;
 
                 foreach (var leaderboard in leaderboards)
                 {
@@ -172,6 +204,65 @@ namespace ShuffledWordGameDL
         public void ClearLeaderboard()
         {
             account.Clear();
+        }
+        public bool InsertNewWords(string arrangedWord)
+        {
+            if (!admin[0].ArrangedWord.Contains(arrangedWord))
+            {
+                admin[0].ArrangedWord.Add(arrangedWord);
+                Shuffle(arrangedWord);
+                return true;
+            }
+            return false;
+        }
+        public string DisplayWord(int index)
+        {
+            return index + 1 + ". " + admin[0].ArrangedWord[index];
+        }
+
+        public int TotalWords()
+        {
+            return admin[0].ArrangedWord.Count();
+        }
+
+        public bool RemoveWord(int index)
+        {
+            string word = admin[0].ArrangedWord[index];
+
+            if (admin[0].ArrangedWord.Contains(word))
+            {
+                admin[0].ArrangedWord.RemoveAt(index);
+                admin[0].ShuffledWord.RemoveAt(index);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public string ShuffledWord(int index)
+        {
+            return admin[0].ShuffledWord[index];
+        }
+
+        public string ArrangedWord(int index)
+        {
+            return admin[0].ArrangedWord[index];
+        }
+        public List<AdminData> GetAdminAccounts()
+        {
+            return admin;
+        }
+        public bool ChangeAdminPassword(string old_password, string new_password)
+        {
+            if (admin[0].Password == old_password)
+            {
+                admin[0].Password = new_password;
+                return true;
+            }
+            
+            return false;
         }
     }
 }

@@ -8,7 +8,6 @@ namespace Project_1
     internal class Program
     {
         static GameBL BusinessLogic = new GameBL();
-        static int playersScore = 0;
         static string password = string.Empty;
 
         static void Main(string[] args)
@@ -101,7 +100,7 @@ namespace Project_1
             } while (Account == "Invalid");
             if (Account == "Admin")
             {
-                int pin = 0000;
+                string pin = BusinessLogic.GetAdminPassword();
                 AdminMenu(pin);
             }
             else if (Account == "Player")
@@ -110,7 +109,7 @@ namespace Project_1
                 Player(playerName);
             }
         }
-        static void AdminMenu(int pin)
+        static void AdminMenu(string pin)
         {
             while (true)
             {
@@ -118,9 +117,10 @@ namespace Project_1
                 Console.Write("Correct Pin!\n" +
                     "[1] Clear Leaderboards\n" +
                     "[2] Add Word\n" +
-                    "[3] Show Arranged and Shuffled Words\n" +
-                    "[4] Remove Word" +
-                    "[5] Exit\nEnter Action : ");
+                    "[3] Show Words\n" +
+                    "[4] Remove Word\n" +
+                    "[5] Change Admin Password\n" +
+                    "[6] Exit\nEnter Action : ");
                 int adminAction = Convert.ToInt16(Console.ReadLine());
                 if (GameBL.MenuValidator(Actions.Admin, adminAction))
                 {
@@ -143,6 +143,9 @@ namespace Project_1
                             RemoveWords(pin);
                             break;
                         case 5:
+                            ChangeAdminPassword(pin);
+                            break;
+                        case 6:
                             WelcomePage();
                             break;
 
@@ -155,7 +158,23 @@ namespace Project_1
             }
 
         }
-        public static void RemoveWords(int pin)
+        public static void ChangeAdminPassword(string pin)
+        {
+            Console.WriteLine("---------------------");
+            Console.Write("Enter your old password : ");
+            string oldPass = Console.ReadLine();
+            Console.Write("Enter your new password : ");
+            string newPass = Console.ReadLine();
+            if (BusinessLogic.ChangeAdminPassword(pin, newPass))
+            {
+                Console.WriteLine("Change password success.");
+            }
+            else
+            {
+                Console.WriteLine("Change password failed.");
+            }
+        }
+        public static void RemoveWords(string pin)
         {
             Console.WriteLine("---------------------");
 
@@ -177,7 +196,7 @@ namespace Project_1
             }
             AdminMenu(pin);
         }
-        static void AddWord(int pin)
+        static void AddWord(string pin)
         {
             Console.WriteLine("---------------------");
 
@@ -188,16 +207,22 @@ namespace Project_1
                 newArrangedWord = Console.ReadLine().ToUpper();
                 if (newArrangedWord != "EXIT")
                 {
-                    string ShuffledWord = GameBL.Shuffle(newArrangedWord);
-                    GameBL.AddShuffledWords(newArrangedWord, ShuffledWord);
-                    Console.WriteLine("New word added successfully!");
-                    Console.WriteLine("---------------------");
+                    if (GameBL.AddShuffledWords(newArrangedWord))
+                    {
+                        Console.WriteLine("New word added successfully!");
+                        Console.WriteLine("---------------------");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Word already Exist.");
+                        Console.WriteLine("---------------------");
+                    }
                 }
 
             } while (newArrangedWord != "EXIT");
             AdminMenu(pin);
         }
-        static void ShowWords(int pin)
+        static void ShowWords(string pin)
         {
             Console.WriteLine("---------------------");
             Console.WriteLine("Words");
@@ -206,7 +231,7 @@ namespace Project_1
                 Console.WriteLine(GameBL.ShowWord(i));
 
             }
-            Console.WriteLine("Enter any key to go back.");
+            Console.Write("Enter any key to go back.");
             Console.ReadKey();
             AdminMenu(pin);
         }

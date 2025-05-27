@@ -12,21 +12,12 @@ namespace ShuffledWordGameBL
         static int questionShuffler;
         static ShuffledWordDataLogic DataLogic = new ShuffledWordDataLogic();
 
-        static string[] questions = { "YEES", "NSPI", "SACH", "CEHSS", "HALKC" };
-        static string[] answers = { "EYES", "SPIN", "CASH", "CHESS", "CHALK" };
-        static List<int> givenIndex = new List<int>();
-        static List<string> questionsList = new List<string>(questions);
-        static List<string> answersList = new List<string>(answers);
 
+        static List<int> givenIndex = new List<int>();
+        
         public bool RemoveWords(int index)
         {
-            if(index < 0 || index >= questionsList.Count)
-            {
-                return false;
-            }
-            questionsList.RemoveAt(index);
-            answersList.RemoveAt(index);
-            return true;
+            return DataLogic.RemoveWord(index);
         }
         public static int Correct()
         {
@@ -47,30 +38,13 @@ namespace ShuffledWordGameBL
         }
         public static int TotalWords()
         {
-            return questionsList.Count();
+            return DataLogic.TotalWords();
         }
         public static void Reset()
         {
             givenIndex.Clear();
             lives = 3;
             score = 0;
-        }
-        public static string Shuffle(string word)
-        {
-            char[] wordToChar = word.ToCharArray();
-            List<char> lettersChar = new List<char>(wordToChar);
-            Random numberRandom = new Random();
-            string wordShuffled = "";
-
-            while (0 < lettersChar.Count)
-            {
-                int randomIndex = numberRandom.Next(lettersChar.Count);
-                wordShuffled += lettersChar[randomIndex];
-                lettersChar.RemoveAt(randomIndex);
-            }
-
-            return wordShuffled;
-
         }
         public static void RandomizerQuestion()
         {
@@ -86,25 +60,23 @@ namespace ShuffledWordGameBL
                 }
                 while (givenIndex.Contains(questionShuffler));
             }
-
             givenIndex.Add(questionShuffler);
         }
         public static string QuestionsList()
         {
-            return questionsList[questionShuffler];
+            return DataLogic.ShuffledWord(questionShuffler);
         }
         public static string AnswersList()
         {
-            return answersList[questionShuffler];
+            return DataLogic.ArrangedWord(questionShuffler);
         }
-        public static void AddShuffledWords(string newAnswer, string newShuffled)
+        public static bool AddShuffledWords(string newAnswer)
         {
-            answersList.Add(newAnswer);
-            questionsList.Add(newShuffled);
+            return DataLogic.InsertNewWord(newAnswer);
         }
         public static string ShowWord(int i)
         {
-            return i + 1 + ". " + answersList[i];
+            return DataLogic.DisplayWord(i);
         }
         public static bool MenuValidator(Actions userAction, int number)
         {
@@ -113,7 +85,7 @@ namespace ShuffledWordGameBL
             {
                 result = true;
             }
-            if (userAction == Actions.Admin && number >= 1 && number <= 5)
+            if (userAction == Actions.Admin && number >= 1 && number <= 6)
             {
                 result = true;
             }
@@ -160,11 +132,16 @@ namespace ShuffledWordGameBL
         }
         public bool VerifyAdminAccount(string username, string password)
         {
-            if (username == "ADMIN" && password == "admin123")
+            List<ShuffledWordGameCommon.AdminData> admin = GetAdminAccounts();
+            bool result = false;
+            foreach (var users in admin)
             {
-                return true;
+                if (users.Username == username && users.Password == password)
+                {
+                    result = true;
+                }
             }
-            return false;
+            return result;
         }
         public string PlayerName(string Username)
         {
@@ -188,29 +165,62 @@ namespace ShuffledWordGameBL
         }
         public List<ShuffledWordGameCommon.GameAccounts> GetAccounts()
         {
-            return DataLogic.GetAccounts();
+            return DataLogic.GetPlayerAccounts();
         }
+        public List<ShuffledWordGameCommon.AdminData> GetAdminAccounts()
+        {
+            return DataLogic.GetAdminAccounts();
+        }
+
         public bool VerifyAccountExisting(string username)
         {
+            
             List<ShuffledWordGameCommon.GameAccounts> accounts = GetAccounts();
-            foreach(var users in accounts)
+            if (!username.Contains("ADMIN"))
             {
-                if(users.Username == username)
+
+                foreach (var users in accounts)
                 {
-                    return true;
+                    if (users.Username == username)
+                    {
+                        return true;
+                    }
                 }
             }
             return false;
         }
         public bool CreateAccount(string name, string username, string password)
         {
-            if (username.Length > 3 && password.Length > 7)
+            if (!username.Contains("ADMIN"))
             {
-                if (!VerifyAccountExisting(username))
+
+                if (username.Length > 3 && password.Length > 7)
                 {
-                    DataLogic.CreateAccount(name, username, password);
-                    return true;
+                    if (!VerifyAccountExisting(username))
+                    {
+                        DataLogic.CreateAccount(name, username, password);
+                        return true;
+                    }
                 }
+            }
+            return false;
+        }
+        public string GetAdminPassword()
+        {
+            foreach (var admin in DataLogic.GetAdminAccounts())
+            {
+                if (admin.Username == "ADMIN")
+                {
+                    return admin.Password;
+                }
+            }
+            return null;
+        }
+        public bool ChangeAdminPassword(string oldPassword, string newPassword)
+        {
+            if (newPassword.Length > 7 && oldPassword == GetAdminPassword())
+            {
+                return DataLogic.ChangeAdminPassword(oldPassword, newPassword);
             }
             return false;
         }

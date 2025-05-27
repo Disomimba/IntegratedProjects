@@ -12,52 +12,77 @@ namespace ShuffledWordGameDL
     {
         public List<GameAccounts> account = new List<GameAccounts>();
         public List<Leaderboards> leaderboards = new List<Leaderboards>();
+        public List<AdminData> admin = new List<AdminData>();
         string filePath = "account.json";
+        string adminFilePath = "admin.json";
 
         public InJsonData()
         {
-            
             GetDataFromFile();
-        }
 
+            GetAdminDataFromFile();
+        }
         private void GetDataFromFile()
         {
             string jsonText = File.ReadAllText(filePath);
-
             account = JsonSerializer.Deserialize<List<GameAccounts>>(jsonText,
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
             );
             FindPlayerHighScore();
         }
+        private void GetAdminDataFromFile()
+        {
+            string jsonText = File.ReadAllText(adminFilePath);
+            admin = JsonSerializer.Deserialize<List<AdminData>>(jsonText,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+            );
+            admin[0].ShuffledWord.Clear();
+            for (int i = 0; i < admin[0].ArrangedWord.Count; i++)
+            {
+                Shuffle(admin[0].ArrangedWord[i]);
+            }
+        }
+        public void Shuffle(string word)
+        {
+            char[] wordToChar = word.ToCharArray();
+            List<char> lettersChar = new List<char>(wordToChar);
+            Random numberRandom = new Random();
+            string wordShuffled = "";
 
-        public List<GameAccounts> Accounts()
+            while (0 < lettersChar.Count)
+            {
+                int randomIndex = numberRandom.Next(lettersChar.Count);
+                wordShuffled += lettersChar[randomIndex];
+                lettersChar.RemoveAt(randomIndex);
+            }
+            admin[0].ShuffledWord.Add(wordShuffled);
+            SaveDataToFile("ADMIN");
+        }
+        public List<GameAccounts> GetPlayerAccounts()
         {
             return account;
         }
-
         public void AddScoreList(string username, int score, int error)
         {
             int index = FindAccountIndex(username);
-                account[index].Score.Add(score);
-                account[index].History.Add("Score : " + score + " | Error : " + error + "\n");
-                SaveDataToFile();
-                FindPlayerHighScore();
-            
+            account[index].Score.Add(score);
+            account[index].History.Add("Score : " + score + " | Error : " + error + "\n");
+            SaveDataToFile("PLAYER");
+            FindPlayerHighScore();
         }
-
         public bool ChangePassword(string username, string old_password, string new_password)
         {
             int index = FindAccountIndex(username);
-            if(index != -1)
+            if (index != -1)
             {
                 if (account[index].Password == old_password)
                 {
                     account[index].Password = new_password;
-                    SaveDataToFile();
+                    SaveDataToFile("PLAYER");
                     return true;
                 }
             }
-           return false;
+            return false;
         }
 
         public void ClearLeaderboard()
@@ -85,8 +110,7 @@ namespace ShuffledWordGameDL
                 Username = username,
                 Password = password
             });
-            SaveDataToFile();
-            
+            SaveDataToFile("PLAYER");
         }
 
         public void FindPlayerHighScore()
@@ -99,11 +123,8 @@ namespace ShuffledWordGameDL
                     int playerHighScore = accounts.Score.Max();
                     TopPlayers(username, playerHighScore);
                 }
-
-
             }
         }
-
         public void TopPlayers(string username, int score)
         {
             if (score > 0)
@@ -132,7 +153,6 @@ namespace ShuffledWordGameDL
                 BubbleSort(leaderboards.Count);
             }
         }
-
         public void BubbleSort(int size)
         {
             for (int i = 0; i < size - 1; i++)
@@ -157,7 +177,6 @@ namespace ShuffledWordGameDL
             {
                 username_scores += $"{displayLeaderboards.Username}\t{displayLeaderboards.Score}\n";
             }
-
             return username_scores;
         }
         public string DisplayPlayerHistory(string username)
@@ -172,14 +191,12 @@ namespace ShuffledWordGameDL
                         playerHistory += accounts.History[i];
                     }
                     return playerHistory;
-
                 }
             }
             return null;
         }
         public string GetPlayerName(string username)
         {
-
             foreach (var accounts in account)
             {
                 if (accounts.Username == username)
@@ -188,11 +205,9 @@ namespace ShuffledWordGameDL
                 }
             }
             return null;
-
         }
         public string GetPlayerUsername(string name)
         {
-
             foreach (var accounts in account)
             {
                 if (accounts.Name == name)
@@ -201,13 +216,74 @@ namespace ShuffledWordGameDL
                 }
             }
             return null;
-
         }
-        private void SaveDataToFile()
+        private void SaveDataToFile(string saveTo)
         {
-            string json = JsonSerializer.Serialize(account, new JsonSerializerOptions
-            { WriteIndented = true });
-            File.WriteAllText(filePath, json);
+            if (saveTo == "ADMIN")
+            {
+                string json = JsonSerializer.Serialize(admin, new JsonSerializerOptions
+                { WriteIndented = true });
+                File.WriteAllText(adminFilePath, json);
+            }
+            else if (saveTo == "PLAYER")
+            {
+                string json = JsonSerializer.Serialize(account, new JsonSerializerOptions
+                { WriteIndented = true });
+                File.WriteAllText(filePath, json);
+            }
+        }
+        public string DisplayWord(int index)
+        {
+            return index + 1 + ". " + admin[0].ArrangedWord[index];
+        }
+        public int TotalWords()
+        {
+            return admin[0].ArrangedWord.Count;
+        }
+        public bool RemoveWord(int index)
+        {
+            string word = admin[0].ArrangedWord[index];
+            if (admin[0].ArrangedWord.Contains(word))
+            {
+                admin[0].ArrangedWord.RemoveAt(index);
+                admin[0].ShuffledWord.RemoveAt(index);
+                SaveDataToFile("ADMIN");
+                return true;
+            }
+            return false;
+        }
+        public string ShuffledWord(int index)
+        {
+            return admin[0].ShuffledWord[index];
+        }
+        public string ArrangedWord(int index)
+        {
+            return admin[0].ArrangedWord[index];
+        }
+        public List<AdminData> GetAdminAccounts()
+        {
+            return admin;
+        }
+
+        public bool InsertNewWords(string arrangedWord)
+        {
+            if (!admin[0].ArrangedWord.Contains(arrangedWord))
+            {
+                admin[0].ArrangedWord.Add(arrangedWord);
+                Shuffle(arrangedWord);
+                return true;
+            }
+            return false;
+        }
+        public bool ChangeAdminPassword(string old_password, string new_password)
+        {
+            if (admin[0].Password == old_password)
+            {
+                admin[0].Password = new_password;
+                SaveDataToFile("ADMIN");
+                return true;
+            }
+            return false;
         }
     }
 }
