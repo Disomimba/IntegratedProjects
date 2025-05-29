@@ -388,7 +388,6 @@ namespace ShuffledWordGameDL
                 insertCommand.Parameters.AddWithValue("@arrangedWord", arrangedWord);
                 insertCommand.ExecuteNonQuery();
                 sqlConnection.Close();
-                Console.WriteLine("ADMIN USERNAME : " + admin[0].Username);
                 admin[0].ArrangedWord.Add(arrangedWord);
                 Shuffle(arrangedWord);
                 return true;
