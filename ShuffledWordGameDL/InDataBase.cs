@@ -315,7 +315,7 @@ namespace ShuffledWordGameDL
                     string playerHistory = "";
                     for (int i = 0; i <= accounts.History.Count - 1; i++)
                     {
-                        playerHistory += accounts.History[i];
+                        playerHistory += accounts.History[i] + "\n";
                     }
                     return playerHistory;
 

@@ -19,9 +19,9 @@ namespace ShuffledWordGameDL
         public ShuffledWordDataLogic()
         {
             //interfaceDataLogic = new InMemoryData();
-            interfaceDataLogic = new InJsonData();
+            //interfaceDataLogic = new InJsonData();
             //interfaceDataLogic = new InTextData();
-            //interfaceDataLogic = new InDataBase();
+            interfaceDataLogic = new InDataBase();
 
 
         }
