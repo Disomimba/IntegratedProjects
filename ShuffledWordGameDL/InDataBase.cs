@@ -171,13 +171,12 @@ namespace ShuffledWordGameDL
         {
             sqlConnection.Open();
             string insertScore = "INSERT INTO Scores (Username, Score, Error) VALUES (@username, @score, @error)";
-            using (SqlCommand insertCommand = new SqlCommand(insertScore, sqlConnection))
-            {
+            SqlCommand insertCommand = new SqlCommand(insertScore, sqlConnection);
                 insertCommand.Parameters.AddWithValue("@username", username);
                 insertCommand.Parameters.AddWithValue("@score", score);
                 insertCommand.Parameters.AddWithValue("@error", error);
                 insertCommand.ExecuteNonQuery();
-            }
+            
             sqlConnection.Close();
             int index = FindPlayerIndex(username);
             account[index].Score.Add(score);
@@ -188,12 +187,11 @@ namespace ShuffledWordGameDL
         {
             sqlConnection.Open();
             string insertHistory = "INSERT INTO History (Username, History) VALUES (@username, @history)";
-            using (SqlCommand insertCommand = new SqlCommand(insertHistory, sqlConnection))
-            {
+            SqlCommand insertCommand = new SqlCommand(insertHistory, sqlConnection);
                 insertCommand.Parameters.AddWithValue("@username", username);
                 insertCommand.Parameters.AddWithValue("@history", $"Score : {score} | Error : {error}");
                 insertCommand.ExecuteNonQuery();
-            }
+            
             sqlConnection.Close();
             int index = FindPlayerIndex(username);
             account[index].History.Add($"Score : {score} | Error : {error}");
