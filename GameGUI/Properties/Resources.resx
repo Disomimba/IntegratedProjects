@@ -127,9 +127,6 @@
   <data name="btn_settings_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\btn_settings_hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="btn_mechanics_normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\btn_mechanics_normal.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="btn_home_normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\btn_home_normal.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -139,16 +136,28 @@
   <data name="btn_play_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\btn_play_hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="btn_mechanics_normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\btn_mechanics_normal.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="btn_history_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\btn_history_hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="background" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\background.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="btn_settings_normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\btn_settings_normal.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="music_bg" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\music_bg.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="btn_play_normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\btn_play_normal.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="background" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\background.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="btn_music_unmute" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\btn_music_unmute.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="btn_music_mute" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\btn_music_mute.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

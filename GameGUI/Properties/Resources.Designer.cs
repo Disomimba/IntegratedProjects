@@ -133,6 +133,26 @@ namespace GameGUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap btn_music_mute {
+            get {
+                object obj = ResourceManager.GetObject("btn_music_mute", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap btn_music_unmute {
+            get {
+                object obj = ResourceManager.GetObject("btn_music_unmute", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap btn_play_hover {
             get {
                 object obj = ResourceManager.GetObject("btn_play_hover", resourceCulture);
@@ -167,6 +187,15 @@ namespace GameGUI.Properties {
             get {
                 object obj = ResourceManager.GetObject("btn_settings_normal", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream music_bg {
+            get {
+                return ResourceManager.GetStream("music_bg", resourceCulture);
             }
         }
     }

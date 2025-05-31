@@ -32,6 +32,7 @@
             txt_answer = new TextBox();
             lbl_lives = new Label();
             btn_submit = new Button();
+            btn_music = new Button();
             SuspendLayout();
             // 
             // lbl_shuffledWord
@@ -79,16 +80,34 @@
             btn_submit.UseVisualStyleBackColor = false;
             btn_submit.Click += btn_submit_Click;
             // 
+            // btn_music
+            // 
+            btn_music.BackColor = Color.Transparent;
+            btn_music.BackgroundImage = Properties.Resources.btn_music_unmute;
+            btn_music.BackgroundImageLayout = ImageLayout.Zoom;
+            btn_music.FlatAppearance.BorderSize = 0;
+            btn_music.FlatStyle = FlatStyle.Flat;
+            btn_music.Font = new Font("Imprint MT Shadow", 12F);
+            btn_music.ForeColor = Color.Black;
+            btn_music.Location = new Point(12, 12);
+            btn_music.Name = "btn_music";
+            btn_music.Size = new Size(50, 50);
+            btn_music.TabIndex = 5;
+            btn_music.UseVisualStyleBackColor = false;
+            btn_music.Click += btn_music_Click;
+            // 
             // frm_game
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = Properties.Resources.background;
             ClientSize = new Size(384, 461);
+            Controls.Add(btn_music);
             Controls.Add(btn_submit);
             Controls.Add(lbl_lives);
             Controls.Add(txt_answer);
             Controls.Add(lbl_shuffledWord);
+            DoubleBuffered = true;
             Name = "frm_game";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Game";
@@ -102,5 +121,6 @@
         private TextBox txt_answer;
         private Label lbl_lives;
         private Button btn_submit;
+        private Button btn_music;
     }
 }

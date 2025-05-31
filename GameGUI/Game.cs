@@ -16,8 +16,9 @@ namespace GameGUI
     public partial class frm_game : Form
     {
         static ShuffledWordGameBL.GameBL BusinessLogic = new ShuffledWordGameBL.GameBL();
+        System.Media.SoundPlayer music = new System.Media.SoundPlayer(Properties.Resources.music_bg);
         private string pangalan;
-
+        private bool playing = true;
         public frm_game(string name)
         {
 
@@ -28,7 +29,7 @@ namespace GameGUI
             lbl_shuffledWord.Text = GameBL.QuestionsList();
             txt_answer.Text = "";
             txt_answer.Clear();
-
+            music.PlayLooping();
         }
 
         int currentQuestionIndex = 0;
@@ -39,26 +40,34 @@ namespace GameGUI
                 string answer = txt_answer.Text.Trim().ToUpper();
 
                 if (answer == GameBL.AnswersList())
-                {   
+                {
+                    btn_submit.Enabled = false;
                     txt_answer.Text = "Correct!";
+                    txt_answer.Enabled = false;
                     txt_answer.ForeColor = Color.Green;
                     await Task.Delay(3000);
                     txt_answer.ForeColor = Color.Black;
                     txt_answer.Text = "";
                     txt_answer.Clear();
+                    txt_answer.Enabled = true;
+                    btn_submit.Enabled = true;
                     GameBL.Correct();
                 }
                 else
                 {
+                    txt_answer.Enabled = false;
+                    btn_submit.Enabled = false;
                     txt_answer.Text = "Incorect!";
                     txt_answer.ForeColor = Color.Red;
                     await Task.Delay(3000);
                     txt_answer.ForeColor = Color.Black;
                     txt_answer.Text = "";
+                    btn_submit.Enabled = true;
+                    txt_answer.Enabled = true;
                     GameBL.Incorrect();
                     UpdateLivesDisplay();
                 }
-                
+
                 currentQuestionIndex++;
                 if (currentQuestionIndex < GameBL.TotalWords() && GameBL.Lives() > 0)
                 {
@@ -76,9 +85,6 @@ namespace GameGUI
                     player.Show();
                     this.Close();
                 }
-                
-                
-                
             }
         }
 
@@ -92,13 +98,30 @@ namespace GameGUI
             {
                 lbl_lives.Text = "❤ 💔 💔";
             }
-            
+
         }
-        static void DisplayFinalScore(string name)
+        private void DisplayFinalScore(string name)
         {
             MessageBox.Show($"Your Score is: {GameBL.ShowScore()} out of {GameBL.TotalWords()}");
             BusinessLogic.UpdatePlayerHistory(name);
-            
+            music.Stop();
+        }
+
+        private void btn_music_Click(object sender, EventArgs e)
+        {
+            if(playing)
+            {
+                music.Stop();
+                btn_music.BackgroundImage = Properties.Resources.btn_music_mute;
+                playing = false;
+                
+            }
+            else
+            {
+                music.PlayLooping();
+                btn_music.BackgroundImage = Properties.Resources.btn_music_unmute;
+                playing = true;
+            }
         }
     }
 }
