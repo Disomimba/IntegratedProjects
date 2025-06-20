@@ -15,6 +15,7 @@ namespace ShuffledWordGameDL
         public List<AdminData> admin = new List<AdminData>();
         string filePath = "account.json";
         string adminFilePath = "admin.json";
+        string leaderboardsFilePath = "leaderboards.json";
 
         public InJsonData()
         {
@@ -88,6 +89,13 @@ namespace ShuffledWordGameDL
         public void ClearLeaderboard()
         {
             leaderboards.Clear();
+            foreach(var accounts in account)
+            {
+                accounts.Score.Clear();
+                accounts.History.Clear();
+            }
+            SaveDataToFile("LEADERBOARDS");
+            SaveDataToFile("PLAYER");
         }
 
         public int FindAccountIndex(string username)
@@ -138,6 +146,7 @@ namespace ShuffledWordGameDL
                         if (score > leaderboards[i].Score)
                         {
                             leaderboards[i].Score = score;
+                            SaveDataToFile("LEADERBOARDS");
                         }
                         break;
                     }
@@ -149,6 +158,7 @@ namespace ShuffledWordGameDL
                     newEntry.Username = username;
                     newEntry.Score = score;
                     leaderboards.Add(newEntry);
+                    SaveDataToFile("LEADERBOARDS");
                 }
                 BubbleSort(leaderboards.Count);
             }
@@ -168,33 +178,22 @@ namespace ShuffledWordGameDL
                 }
             }
         }
-
-        public string DisplayLeaderboard()
+        public List<Leaderboards> GetLeaderboardAccounts()
         {
-            string username_scores = string.Empty;
-
-            foreach (var displayLeaderboards in leaderboards)
-            {
-                username_scores += $"{displayLeaderboards.Username}\t{displayLeaderboards.Score}\n";
-            }
-            return username_scores;
+            return leaderboards;
         }
-        public string DisplayPlayerHistory(string username)
+        public List<string> DisplayPlayerHistory(string username)
         {
             foreach (var accounts in account)
             {
                 if (accounts.Username == username)
                 {
-                    string playerHistory = "";
-                    for (int i = 0; i <= accounts.History.Count - 1; i++)
-                    {
-                        playerHistory += accounts.History[i];
-                    }
-                    return playerHistory;
+                    return accounts.History;
                 }
             }
             return null;
         }
+        
         public string GetPlayerName(string username)
         {
             foreach (var accounts in account)
@@ -231,10 +230,16 @@ namespace ShuffledWordGameDL
                 { WriteIndented = true });
                 File.WriteAllText(filePath, json);
             }
+            else if(saveTo == "LEADERBOARDS")
+            {
+                string json = JsonSerializer.Serialize(leaderboards, new JsonSerializerOptions
+                { WriteIndented = true });
+                File.WriteAllText(leaderboardsFilePath, json);
+            }
         }
-        public string DisplayWord(int index)
+        public List<string> DisplayWord()
         {
-            return index + 1 + ". " + admin[0].ArrangedWord[index];
+            return admin[0].ArrangedWord;
         }
         public int TotalWords()
         {

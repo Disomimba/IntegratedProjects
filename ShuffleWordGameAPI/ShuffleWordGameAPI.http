@@ -1,0 +1,6 @@
+@ShuffleWordGameAPI_HostAddress = http://localhost:5090
+
+GET {{ShuffleWordGameAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

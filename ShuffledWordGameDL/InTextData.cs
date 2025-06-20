@@ -3,9 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using static Azure.Core.HttpHeader;
 using static System.Formats.Asn1.AsnWriter;
 
 namespace ShuffledWordGameDL
@@ -17,6 +19,7 @@ namespace ShuffledWordGameDL
         public List<AdminData> admin = new List<AdminData>();
         string filePath = "account.txt";
         string adminFilePath = "admin.txt";
+        string leaderboardsFilePath = "leaderboards.txt";
         public InTextData()
         {
 
@@ -74,7 +77,15 @@ namespace ShuffledWordGameDL
                 admin.Add(adminData);
                 
             }
-            
+        }
+        public void SaveLeaderboardToFile()
+        {
+            File.WriteAllText(leaderboardsFilePath, string.Empty); 
+            foreach (var leaderboard in leaderboards)
+            {
+                var newLeaderboard = $"{leaderboard.Username}|{leaderboard.Score}\n";
+                File.AppendAllText(leaderboardsFilePath, newLeaderboard);
+            }
         }
         public void Shuffle(AdminData adminData, string word)
         {
@@ -149,6 +160,22 @@ namespace ShuffledWordGameDL
         public void ClearLeaderboard()
         {
             leaderboards.Clear();
+            foreach (var accounts in account)
+            {
+                accounts.Score.Clear();
+                accounts.History.Clear();
+            }
+            SaveLeaderboardToFile();
+            UpdateAccountsInFile();
+        }
+        private void UpdateAccountsInFile()
+        {
+            File.WriteAllText(filePath, string.Empty);
+            foreach (var account in this.account)
+            {
+                var newFile = $"{account.Name}|{account.Username}|{account.Password}\n";
+                File.AppendAllText(filePath, newFile);
+            }
         }
         public int FindAccountIndex(string username)
         {
@@ -171,7 +198,6 @@ namespace ShuffledWordGameDL
             });
             var newAccount = $"{name}|{username}|{password}\n";
             File.AppendAllText(filePath, newAccount);
-            GetDataFromFile();
 
         }
         public void FindPlayerHighScore()
@@ -202,6 +228,7 @@ namespace ShuffledWordGameDL
                         if (score > leaderboard.Score)
                         {
                             leaderboard.Score = score;
+                            SaveLeaderboardToFile();
                         }
                         break;
                     }
@@ -213,7 +240,9 @@ namespace ShuffledWordGameDL
                     {
                         Score = score,
                         Username = username
+                        
                     });
+                    SaveLeaderboardToFile();
                 }
                 BubbleSort(leaderboards.Count());
             }
@@ -234,30 +263,17 @@ namespace ShuffledWordGameDL
                 }
             }
         }
-        public string DisplayLeaderboard()
+        public List<Leaderboards> GetLeaderboardAccounts()
         {
-            string username_scores = string.Empty;
-
-            foreach (var displayLeaderboards in leaderboards)
-            {
-                username_scores += $"{displayLeaderboards.Username}\t{displayLeaderboards.Score}\n";
-            }
-
-            return username_scores;
+            return leaderboards;
         }
-        public string DisplayPlayerHistory(string username)
+        public List<string> DisplayPlayerHistory(string username)
         {
             foreach (var accounts in account)
             {
                 if (accounts.Username == username)
                 {
-                    string playerHistory = "";
-                    for (int i = 0; i <= accounts.History.Count - 1; i++)
-                    {
-                        playerHistory += accounts.History[i];
-                    }
-                    return playerHistory;
-
+                    return accounts.History;
                 }
             }
             return null;
@@ -293,11 +309,10 @@ namespace ShuffledWordGameDL
         {
             return admin;
         }
-        public string DisplayWord(int index)
+        public List<string> DisplayWord()
         {
-            return index +1 + ". " + admin[0].ArrangedWord[index];
+            return admin[0].ArrangedWord;
         }
-
         public int TotalWords()
         {
             return admin[0].ArrangedWord.Count();

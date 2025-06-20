@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace ShuffledWordGameCommon
 {
+
     public class Leaderboards
     {
         public int Score { get; set;}

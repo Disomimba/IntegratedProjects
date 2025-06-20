@@ -74,9 +74,9 @@ namespace ShuffledWordGameBL
         {
             return DataLogic.InsertNewWord(newAnswer);
         }
-        public static string ShowWord(int i)
+        public static List<string> ShowWord()
         {
-            return DataLogic.DisplayWord(i);
+            return DataLogic.DisplayWord();
         }
         public static bool MenuValidator(Actions userAction, int number)
         {
@@ -147,13 +147,13 @@ namespace ShuffledWordGameBL
         {
             return DataLogic.GetPlayerName(Username);
         }
-        public string ShowPlayerHistory(string user)
+        public List<string> ShowPlayerHistory(string user)
         {
             return DataLogic.DisplayPlayerHistory(user);
         }
-        public string DisplayLeaderboard()
+        public List<Leaderboards> GetLeaderboardAccounts()
         {
-            return DataLogic.DisplayLeaderboard();
+            return DataLogic.GetLeaderboardAccounts();
         }
         public void ClearLeaderboard()
         {

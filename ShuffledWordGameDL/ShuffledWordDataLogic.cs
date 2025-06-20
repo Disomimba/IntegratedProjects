@@ -30,9 +30,9 @@ namespace ShuffledWordGameDL
         {
            return interfaceDataLogic.InsertNewWords(arrangedWord);
         }
-        public string DisplayWord(int i)
+        public List<string> DisplayWord()
         {
-            return interfaceDataLogic.DisplayWord(i);
+            return interfaceDataLogic.DisplayWord();
         }
         public bool RemoveWord(int index)
         {
@@ -74,11 +74,11 @@ namespace ShuffledWordGameDL
         {
             interfaceDataLogic.AddScoreList(username, score, error);
         }
-        public string DisplayLeaderboard()
+        public List<Leaderboards> GetLeaderboardAccounts()
         {
-            return interfaceDataLogic.DisplayLeaderboard();
+            return interfaceDataLogic.GetLeaderboardAccounts();
         }
-        public string DisplayPlayerHistory(string username)
+        public List<string> DisplayPlayerHistory(string username)
         {
             return interfaceDataLogic.DisplayPlayerHistory(username);
         }

@@ -1,4 +1,5 @@
-﻿using ShuffledWordGameBL;
+﻿using Microsoft.IdentityModel.Tokens;
+using ShuffledWordGameBL;
 using ShuffledWordGameDL;
 using System.Net.NetworkInformation;
 using System.Security.Principal;
@@ -113,8 +114,9 @@ namespace Project_1
         {
             while (true)
             {
+                Console.Clear();
                 Console.WriteLine("---------------------");
-                Console.Write("Correct Pin!\n" +
+                Console.Write(
                     "[1] Clear Leaderboards\n" +
                     "[2] Add Word\n" +
                     "[3] Show Words\n" +
@@ -179,9 +181,11 @@ namespace Project_1
             Console.WriteLine("---------------------");
 
             Console.WriteLine("Words");
-            for (int i = 0; i <= GameBL.TotalWords() - 1; i++)
+            int i = 1;
+            foreach(var word in GameBL.ShowWord())
             {
-                Console.WriteLine(GameBL.ShowWord(i));
+                Console.WriteLine($"{i}. {word}");
+                i++;
             }
             Console.Write("Enter the number you want to remove : ");
             int wordToRemove = Convert.ToInt16(Console.ReadLine());
@@ -218,6 +222,10 @@ namespace Project_1
                         Console.WriteLine("---------------------");
                     }
                 }
+                else if (newArrangedWord.IsNullOrEmpty())
+                {
+                    Console.WriteLine("You must enter a word or type 'exit' to quit.");
+                }
 
             } while (newArrangedWord != "EXIT");
             AdminMenu(pin);
@@ -226,10 +234,11 @@ namespace Project_1
         {
             Console.WriteLine("---------------------");
             Console.WriteLine("Words");
-            for (int i = 0; i <= GameBL.TotalWords() - 1; i++)
+            int i = 1;
+            foreach (var word in GameBL.ShowWord())
             {
-                Console.WriteLine(GameBL.ShowWord(i));
-
+                Console.WriteLine($"{i}. {word}");
+                i++;
             }
             Console.Write("Enter any key to go back.");
             Console.ReadKey();
@@ -237,6 +246,7 @@ namespace Project_1
         }
         static void Player(string name)
         {
+            Console.Clear();
             while (true)
             {
                 Console.WriteLine("---------------------");
@@ -312,7 +322,10 @@ namespace Project_1
             Console.WriteLine("---------------------");
             Console.WriteLine("GAME HISTORY");
             string user = BusinessLogic.GetPlayerUsername(name);
-            Console.WriteLine(BusinessLogic.ShowPlayerHistory(user));
+            foreach (var history in BusinessLogic.ShowPlayerHistory(user))
+            {
+                Console.WriteLine(history);
+            }
             Console.WriteLine("\nPress any key to go back");
             Console.ReadKey();
         }
@@ -375,7 +388,10 @@ namespace Project_1
         {
             Console.WriteLine("---------------------");
             Console.WriteLine("LEADERBOARDS");
-            Console.WriteLine(BusinessLogic.DisplayLeaderboard());
+            foreach(var player in BusinessLogic.GetLeaderboardAccounts())
+            {
+                Console.WriteLine($"{player.Username} - {player.Score}");
+            }
             Console.ReadKey();
             WelcomePage();
         }

@@ -12,8 +12,9 @@ namespace ShuffledWordGameDL
     {
         public List<GameAccounts> GetPlayerAccounts();
         public List<AdminData> GetAdminAccounts();
+        public List<Leaderboards> GetLeaderboardAccounts();
         public bool InsertNewWords(string arrangedWord);
-        public string DisplayWord(int index);
+        public List<string> DisplayWord();
         public int TotalWords();
         public bool RemoveWord(int index);
         public string ShuffledWord(int index);
@@ -22,8 +23,7 @@ namespace ShuffledWordGameDL
         public void AddScoreList(string username, int score, int error);
         public bool ChangePassword(string username, string old_password, string new_password);
         public bool ChangeAdminPassword(string old_password, string new_password);
-        public string DisplayLeaderboard();
-        public string DisplayPlayerHistory(string username);
+        public List<string> DisplayPlayerHistory(string username);
         public string GetPlayerName(string username);
         public string GetPlayerUsername(string name);
         public void ClearLeaderboard();

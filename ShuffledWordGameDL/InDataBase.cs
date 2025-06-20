@@ -14,7 +14,8 @@ namespace ShuffledWordGameDL
         static string connectionString = "Data Source =DESKTOP-S1ATCN7\\SQLEXPRESS; Initial Catalog = DB_Game ; Integrated Security=true;TrustServerCertificate=True;";
         static SqlConnection sqlConnection;
         public List<GameAccounts> account = new List<GameAccounts>();
-        public List<Leaderboards> leaderboards = new List<Leaderboards>();
+        public List<
+        Leaderboards> leaderboards = new List<Leaderboards>();
         public List<AdminData> admin = new List<AdminData>();
         public InDataBase()
         {
@@ -51,7 +52,7 @@ namespace ShuffledWordGameDL
         public void ScoresErrorHistoryFromDB()
         {
             sqlConnection.Open();
-            string selectScores = "SELECT * FROM Scores";
+            string selectScores = "SELECT * FROM tbl_scores";
             SqlCommand selectScoresCommand = new SqlCommand(selectScores, sqlConnection);
             SqlDataReader scoresReader = selectScoresCommand.ExecuteReader();
             while (scoresReader.Read())
@@ -121,9 +122,9 @@ namespace ShuffledWordGameDL
             admin[0].ShuffledWord.Add(wordShuffled);
 
         }
-        public string DisplayWord(int index)
+        public List<string> DisplayWord()
         {
-            return index + 1 + ". " + admin[0].ArrangedWord[index];
+            return admin[0].ArrangedWord;
         }
         public bool RemoveWord(int index)
         {
@@ -145,8 +146,6 @@ namespace ShuffledWordGameDL
             {
                 return false;
             }
-
-                return false;
         }
         public int TotalWords()
         {
@@ -170,13 +169,12 @@ namespace ShuffledWordGameDL
         public void AddScoreList(string username, int score, int error)
         {
             sqlConnection.Open();
-            string insertScore = "INSERT INTO Scores (Username, Score, Error) VALUES (@username, @score, @error)";
+            string insertScore = "INSERT INTO tbl_scores (Username, Score, Error) VALUES (@username, @score, @error)";
             SqlCommand insertCommand = new SqlCommand(insertScore, sqlConnection);
-                insertCommand.Parameters.AddWithValue("@username", username);
-                insertCommand.Parameters.AddWithValue("@score", score);
-                insertCommand.Parameters.AddWithValue("@error", error);
-                insertCommand.ExecuteNonQuery();
-            
+            insertCommand.Parameters.AddWithValue("@username", username);
+            insertCommand.Parameters.AddWithValue("@score", score);
+            insertCommand.Parameters.AddWithValue("@error", error);
+            insertCommand.ExecuteNonQuery();
             sqlConnection.Close();
             int index = FindPlayerIndex(username);
             account[index].Score.Add(score);
@@ -186,12 +184,12 @@ namespace ShuffledWordGameDL
         public void AddHistory(string username, int score, int error)
         {
             sqlConnection.Open();
-            string insertHistory = "INSERT INTO History (Username, History) VALUES (@username, @history)";
+            string insertHistory = "INSERT INTO tbl_history (Username, History) VALUES (@username, @history)";
             SqlCommand insertCommand = new SqlCommand(insertHistory, sqlConnection);
-                insertCommand.Parameters.AddWithValue("@username", username);
-                insertCommand.Parameters.AddWithValue("@history", $"Score : {score} | Error : {error}");
-                insertCommand.ExecuteNonQuery();
-            
+            insertCommand.Parameters.AddWithValue("@username", username);
+            insertCommand.Parameters.AddWithValue("@history", $"Score : {score} | Error : {error}");
+            insertCommand.ExecuteNonQuery();
+
             sqlConnection.Close();
             int index = FindPlayerIndex(username);
             account[index].History.Add($"Score : {score} | Error : {error}");
@@ -228,10 +226,12 @@ namespace ShuffledWordGameDL
 
                 if (!playerExists)
                 {
-                    Leaderboards newEntry = new Leaderboards();
-                    newEntry.Username = username;
-                    newEntry.Score = score;
-                    leaderboards.Add(newEntry);
+                    leaderboards.Add(new Leaderboards
+                    {
+                        Username = username,
+                        Score = score
+                    });
+                    StoreLeaderboards();
                 }
                 BubbleSort(leaderboards.Count);
             }
@@ -250,6 +250,22 @@ namespace ShuffledWordGameDL
                     }
                 }
             }
+        }
+        public void StoreLeaderboards()
+        {
+            sqlConnection.Open();
+            string delete = "Delete From tbl_leaderboards";
+            SqlCommand deleteCommand = new SqlCommand(delete, sqlConnection);
+            deleteCommand.ExecuteNonQuery();
+            foreach (var leaderboard in leaderboards)
+            {
+                string insert = "Insert into tbl_leaderboards (Username, Score) values (@username, @score)";
+                SqlCommand insertCommand = new SqlCommand(insert, sqlConnection);
+                insertCommand.Parameters.AddWithValue("@username", leaderboard.Username);
+                insertCommand.Parameters.AddWithValue("@score", leaderboard.Score);
+                insertCommand.ExecuteNonQuery();
+            }
+            sqlConnection.Close();
         }
         public bool ChangePassword(string username, string old_password, string new_password)
         {
@@ -280,6 +296,23 @@ namespace ShuffledWordGameDL
         public void ClearLeaderboard()
         {
             leaderboards.Clear();
+            foreach (var accounts in account)
+            {
+                accounts.Score.Clear();
+                accounts.History.Clear();
+            }
+            sqlConnection.Open();
+            string deleteLeaderboards = "Delete From tbl_leaderboards";
+            SqlCommand deleteCommand = new SqlCommand(deleteLeaderboards, sqlConnection);
+            deleteCommand.ExecuteNonQuery();
+            string deleteScores = "Delete From tbl_scores";
+            SqlCommand deleteScoresCommand = new SqlCommand(deleteScores, sqlConnection);
+            deleteScoresCommand.ExecuteNonQuery();
+            string deleteHistory = "Delete From tbl_history";
+            SqlCommand deleteHistoryCommand = new SqlCommand(deleteHistory, sqlConnection);
+            deleteHistoryCommand.ExecuteNonQuery();
+            sqlConnection.Close();
+
         }
         public void CreateAccount(string name, string username, string password)
         {
@@ -293,30 +326,17 @@ namespace ShuffledWordGameDL
             sqlConnection.Close();
             GetDataFromDB();
         }
-        public string DisplayLeaderboard()
+        public List<Leaderboards> GetLeaderboardAccounts()
         {
-            string username_scores = string.Empty;
-
-            foreach (var displayLeaderboards in leaderboards)
-            {
-                username_scores += $"{displayLeaderboards.Username}\t{displayLeaderboards.Score}\n";
-            }
-
-            return username_scores;
+            return leaderboards;
         }
-        public string DisplayPlayerHistory(string username)
+        public List<string> DisplayPlayerHistory(string username)
         {
             foreach (var accounts in account)
             {
                 if (accounts.Username == username)
                 {
-                    string playerHistory = "";
-                    for (int i = 0; i <= accounts.History.Count - 1; i++)
-                    {
-                        playerHistory += accounts.History[i] + "\n";
-                    }
-                    return playerHistory;
-
+                    return accounts.History;
                 }
             }
             return null;
@@ -362,7 +382,7 @@ namespace ShuffledWordGameDL
                 updateCommand.Parameters.AddWithValue("@new_password", newPassword);
                 updateCommand.ExecuteNonQuery();
                 sqlConnection.Close();
-                admin[0].Password = newPassword; 
+                admin[0].Password = newPassword;
                 return true;
             }
             else

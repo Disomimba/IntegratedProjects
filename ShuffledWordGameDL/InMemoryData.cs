@@ -147,30 +147,17 @@ namespace ShuffledWordGameDL
                 }
             }
         }
-        public string DisplayLeaderboard()
+        public List<Leaderboards> GetLeaderboardAccounts()
         {
-            string username_scores = string.Empty;
-
-            foreach (var displayLeaderboards in leaderboards)
-            {
-                username_scores += $"{displayLeaderboards.Username}\t{displayLeaderboards.Score}\n";
-            }
-
-            return username_scores;
+            return leaderboards;
         }
-        public string DisplayPlayerHistory(string username)
+        public List<string> DisplayPlayerHistory(string username)
         {
             foreach (var accounts in account)
             {
                 if (accounts.Username == username)
                 {
-                    string playerHistory = "";
-                    for (int i = 0; i <= accounts.History.Count - 1; i++)
-                    {
-                        playerHistory += accounts.History[i];
-                    }
-                    return playerHistory;
-
+                    return accounts.History;
                 }
             }
             return null;
@@ -203,7 +190,12 @@ namespace ShuffledWordGameDL
         }
         public void ClearLeaderboard()
         {
-            account.Clear();
+            leaderboards.Clear();
+            foreach (var accounts in account)
+            {
+                accounts.Score.Clear();
+                accounts.History.Clear();
+            }
         }
         public bool InsertNewWords(string arrangedWord)
         {
@@ -215,9 +207,9 @@ namespace ShuffledWordGameDL
             }
             return false;
         }
-        public string DisplayWord(int index)
+        public List<string> DisplayWord()
         {
-            return index + 1 + ". " + admin[0].ArrangedWord[index];
+            return admin[0].ArrangedWord;
         }
 
         public int TotalWords()
@@ -261,7 +253,7 @@ namespace ShuffledWordGameDL
                 admin[0].Password = new_password;
                 return true;
             }
-            
+
             return false;
         }
     }
