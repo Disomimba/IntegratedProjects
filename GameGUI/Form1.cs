@@ -27,7 +27,13 @@ namespace GameGUI
 
         private void btn_leaderboards_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(BusinessLogic.DisplayLeaderboard());
+            string leaderboardText = "LEADERBOARDS:\n\n";
+            foreach (var leaderboards in BusinessLogic.GetLeaderboardAccounts())
+            {
+                 leaderboardText += $"{leaderboards.Username} | {leaderboards.Score}\n";
+            }
+            MessageBox.Show(leaderboardText, "Leaderboard", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
         }
 
         private void btn_quit_Click(object sender, EventArgs e)

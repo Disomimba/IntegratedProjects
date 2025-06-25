@@ -52,9 +52,9 @@
             btn_back = new Button();
             pnl_history = new Panel();
             pnl_history_small = new Panel();
-            lbl_score_error = new Label();
             label7 = new Label();
             btn_history_back = new Button();
+            lb_score_error = new ListBox();
             pnl_changePass.SuspendLayout();
             pnl_mechanics.SuspendLayout();
             pnl_history.SuspendLayout();
@@ -359,23 +359,11 @@
             // 
             // pnl_history_small
             // 
-            pnl_history_small.Controls.Add(lbl_score_error);
+            pnl_history_small.Controls.Add(lb_score_error);
             pnl_history_small.Location = new Point(20, 59);
             pnl_history_small.Name = "pnl_history_small";
             pnl_history_small.Size = new Size(244, 136);
             pnl_history_small.TabIndex = 9;
-            // 
-            // lbl_score_error
-            // 
-            lbl_score_error.AutoSize = true;
-            lbl_score_error.BackColor = Color.Transparent;
-            lbl_score_error.Font = new Font("Rockwell", 11.25F);
-            lbl_score_error.ForeColor = Color.White;
-            lbl_score_error.Location = new Point(11, 10);
-            lbl_score_error.Name = "lbl_score_error";
-            lbl_score_error.Size = new Size(55, 17);
-            lbl_score_error.TabIndex = 8;
-            lbl_score_error.Text = "Scores";
             // 
             // label7
             // 
@@ -403,6 +391,15 @@
             btn_history_back.UseVisualStyleBackColor = false;
             btn_history_back.Click += btn_history_back_Click;
             // 
+            // lb_score_error
+            // 
+            lb_score_error.FormattingEnabled = true;
+            lb_score_error.ItemHeight = 15;
+            lb_score_error.Location = new Point(0, 0);
+            lb_score_error.Name = "lb_score_error";
+            lb_score_error.Size = new Size(244, 139);
+            lb_score_error.TabIndex = 10;
+            // 
             // frm_player
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -428,7 +425,6 @@
             pnl_mechanics.PerformLayout();
             pnl_history.ResumeLayout(false);
             pnl_history_small.ResumeLayout(false);
-            pnl_history_small.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -458,7 +454,7 @@
         private Panel pnl_history;
         private Label label7;
         private Button btn_history_back;
-        private Label lbl_score_error;
         private Panel pnl_history_small;
+        private ListBox lb_score_error;
     }
 }

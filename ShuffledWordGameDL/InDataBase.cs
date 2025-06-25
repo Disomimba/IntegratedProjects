@@ -11,7 +11,7 @@ namespace ShuffledWordGameDL
 {
     public class InDataBase : IDataLogic
     {
-        static string connectionString = "Data Source =DESKTOP-S1ATCN7\\SQLEXPRESS; Initial Catalog = DB_Game ; Integrated Security=true;TrustServerCertificate=True;";
+        static string connectionString = "Data Source =Disomimba\\SQLEXPRESS; Initial Catalog = DB_Game ; Integrated Security=true;TrustServerCertificate=True;";
         static SqlConnection sqlConnection;
         public List<GameAccounts> account = new List<GameAccounts>();
         public List<

@@ -39,7 +39,11 @@ namespace GameGUI
         {
             string user = BusinessLogic.GetPlayerUsername(pangalan);
 
-            lbl_score_error.Text = BusinessLogic.ShowPlayerHistory(user);
+            foreach(var ShowHistory in BusinessLogic.ShowPlayerHistory(user))
+            {
+
+                lb_score_error.Items.Add(ShowHistory);
+            }
             pnl_history.Show();
 
         }

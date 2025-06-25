@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.ApplicationServices;
+using ShuffledWordGameBL;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,7 +9,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ShuffledWordGameBL;
 
 namespace GameGUI
 {
@@ -25,9 +26,9 @@ namespace GameGUI
         public void ShowWords()
         {
             listBox_words.Items.Clear();
-            for (int i = 0; i < GameBL.TotalWords(); i++)
+            foreach (var ShowWords in GameBL.ShowWord())
             {
-                listBox_words.Items.Add(GameBL.ShowWord(i));
+                listBox_words.Items.Add(ShowWords);
             }
         }
 
@@ -54,7 +55,8 @@ namespace GameGUI
             int index = listBox_words.SelectedIndex;
             if (index >= 0 && index < GameBL.TotalWords())
             {
-                txt_word.Text = GameBL.ShowWord(index);
+                var wordSelected = GameBL.ShowWord();
+                txt_word.Text = wordSelected[index];
             }
         }
 

@@ -14,12 +14,15 @@
     <Compile Remove="ShuffledWordGameBL\**" />
     <Compile Remove="ShuffledWordGameDL\**" />
     <Compile Remove="ShuffleGameCommon\**" />
+    <Compile Remove="ShuffleWordGameAPI\**" />
     <EmbeddedResource Remove="ShuffledWordGameBL\**" />
     <EmbeddedResource Remove="ShuffledWordGameDL\**" />
     <EmbeddedResource Remove="ShuffleGameCommon\**" />
+    <EmbeddedResource Remove="ShuffleWordGameAPI\**" />
     <None Remove="ShuffledWordGameBL\**" />
     <None Remove="ShuffledWordGameDL\**" />
     <None Remove="ShuffleGameCommon\**" />
+    <None Remove="ShuffleWordGameAPI\**" />
   </ItemGroup>
 
   <ItemGroup>
