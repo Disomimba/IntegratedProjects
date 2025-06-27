@@ -166,6 +166,9 @@
             Controls.Add(txt_username);
             Controls.Add(txt_name);
             Controls.Add(lbl_SignUp);
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "frm_registration";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "RegistrationForm";

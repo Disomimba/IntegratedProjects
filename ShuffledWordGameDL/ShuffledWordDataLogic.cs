@@ -13,42 +13,29 @@ namespace ShuffledWordGameDL
     public class ShuffledWordDataLogic
     {
         public List<GameAccounts> Accounts = new List<GameAccounts>();
-
         IDataLogic interfaceDataLogic;
-
         public ShuffledWordDataLogic()
         {
             //interfaceDataLogic = new InMemoryData();
             //interfaceDataLogic = new InJsonData();
             //interfaceDataLogic = new InTextData();
             interfaceDataLogic = new InDataBase();
-
-
         }
-        
+        public void AddToLeaderboard(Leaderboards accountData)
+        {
+            interfaceDataLogic.AddToLeaderboard(accountData);
+        }
         public bool InsertNewWord(string arrangedWord)
         {
            return interfaceDataLogic.InsertNewWords(arrangedWord);
         }
-        public List<string> DisplayWord()
+        public bool InsertShuffledWord(string shuffledWord)
         {
-            return interfaceDataLogic.DisplayWord();
+            return interfaceDataLogic.InsertShuffledWord(shuffledWord);
         }
         public bool RemoveWord(int index)
         {
             return interfaceDataLogic.RemoveWord(index);
-        }
-        public int TotalWords()
-        {
-            return interfaceDataLogic.TotalWords();
-        }
-        public string ArrangedWord(int index)
-        {
-            return interfaceDataLogic.ArrangedWord(index);
-        }
-        public string ShuffledWord(int index)
-        {
-            return interfaceDataLogic.ShuffledWord(index);
         }
         public List<GameAccounts> GetPlayerAccounts()
         {
@@ -77,18 +64,6 @@ namespace ShuffledWordGameDL
         public List<Leaderboards> GetLeaderboardAccounts()
         {
             return interfaceDataLogic.GetLeaderboardAccounts();
-        }
-        public List<string> DisplayPlayerHistory(string username)
-        {
-            return interfaceDataLogic.DisplayPlayerHistory(username);
-        }
-        public string GetPlayerName(string username)
-        {
-            return interfaceDataLogic.GetPlayerName(username);
-        }
-        public string GetPlayerUsername(string name)
-        {
-            return interfaceDataLogic.GetPlayerUsername(name);
         }
         public void ClearLeaderboard()
         {

@@ -35,11 +35,5 @@ namespace ShuffleWordGameAPI.Controllers
         {
             return BusinessProcess.ShowPlayerHistory(user);
         }
-        [HttpGet("Get Leaderboards")]
-        public List<Leaderboards> GetLeaderboards()
-        {
-            return BusinessProcess.GetLeaderboardAccounts();
-        }
-
     }
 }

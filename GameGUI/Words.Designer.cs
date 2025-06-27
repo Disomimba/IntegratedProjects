@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frm_words));
             txt_word = new TextBox();
             btn_add = new Button();
             btn_remove = new Button();
@@ -126,6 +127,9 @@
             Controls.Add(btn_remove);
             Controls.Add(btn_add);
             Controls.Add(txt_word);
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "frm_words";
             Text = "Words";
             ResumeLayout(false);

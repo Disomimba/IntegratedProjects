@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 
 namespace ShuffledWordGameDL
 {
-    public class InJsonData : IDataLogic
+    public class InJsonData :  IDataLogic
     {
         public List<GameAccounts> account = new List<GameAccounts>();
         public List<Leaderboards> leaderboards = new List<Leaderboards>();
@@ -16,205 +16,23 @@ namespace ShuffledWordGameDL
         string filePath = "account.json";
         string adminFilePath = "admin.json";
         string leaderboardsFilePath = "leaderboards.json";
-
         public InJsonData()
         {
             GetDataFromFile();
-
+            GetLeaderboardsFromFile();
             GetAdminDataFromFile();
-        }
-        private void GetDataFromFile()
-        {
-            string jsonText = File.ReadAllText(filePath);
-            account = JsonSerializer.Deserialize<List<GameAccounts>>(jsonText,
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
-            );
-            FindPlayerHighScore();
-        }
-        private void GetAdminDataFromFile()
-        {
-            string jsonText = File.ReadAllText(adminFilePath);
-            admin = JsonSerializer.Deserialize<List<AdminData>>(jsonText,
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
-            );
-            admin[0].ShuffledWord.Clear();
-            for (int i = 0; i < admin[0].ArrangedWord.Count; i++)
-            {
-                Shuffle(admin[0].ArrangedWord[i]);
-            }
-        }
-        public void Shuffle(string word)
-        {
-            char[] wordToChar = word.ToCharArray();
-            List<char> lettersChar = new List<char>(wordToChar);
-            Random numberRandom = new Random();
-            string wordShuffled = "";
-
-            while (0 < lettersChar.Count)
-            {
-                int randomIndex = numberRandom.Next(lettersChar.Count);
-                wordShuffled += lettersChar[randomIndex];
-                lettersChar.RemoveAt(randomIndex);
-            }
-            admin[0].ShuffledWord.Add(wordShuffled);
-            SaveDataToFile("ADMIN");
-        }
-        public List<GameAccounts> GetPlayerAccounts()
-        {
-            return account;
-        }
-        public void AddScoreList(string username, int score, int error)
-        {
-            int index = FindAccountIndex(username);
-            account[index].Score.Add(score);
-            account[index].History.Add("Score : " + score + " | Error : " + error + "\n");
-            SaveDataToFile("PLAYER");
-            FindPlayerHighScore();
-        }
-        public bool ChangePassword(string username, string old_password, string new_password)
-        {
-            int index = FindAccountIndex(username);
-            if (index != -1)
-            {
-                if (account[index].Password == old_password)
-                {
-                    account[index].Password = new_password;
-                    SaveDataToFile("PLAYER");
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public void ClearLeaderboard()
-        {
-            leaderboards.Clear();
-            foreach(var accounts in account)
-            {
-                accounts.Score.Clear();
-                accounts.History.Clear();
-            }
-            SaveDataToFile("LEADERBOARDS");
-            SaveDataToFile("PLAYER");
-        }
-
-        public int FindAccountIndex(string username)
-        {
-            for (int i = 0; i < account.Count; i++)
-            {
-                if (account[i].Username == username)
-                {
-                    return i;
-                }
-            }
-            return -1;
-        }
-
-        public void CreateAccount(string name, string username, string password)
-        {
-            account.Add(new GameAccounts
-            {
-                Name = name,
-                Username = username,
-                Password = password
-            });
-            SaveDataToFile("PLAYER");
-        }
-
-        public void FindPlayerHighScore()
-        {
-            foreach (var accounts in account)
-            {
-                string username = accounts.Username;
-                if (accounts.Score.Any())
-                {
-                    int playerHighScore = accounts.Score.Max();
-                    TopPlayers(username, playerHighScore);
-                }
-            }
-        }
-        public void TopPlayers(string username, int score)
-        {
-            if (score > 0)
-            {
-                bool playerExists = false;
-                for (int i = 0; i < leaderboards.Count; i++)
-                {
-                    if (leaderboards[i].Username == username)
-                    {
-                        playerExists = true;
-                        if (score > leaderboards[i].Score)
-                        {
-                            leaderboards[i].Score = score;
-                            SaveDataToFile("LEADERBOARDS");
-                        }
-                        break;
-                    }
-                }
-
-                if (!playerExists)
-                {
-                    Leaderboards newEntry = new Leaderboards();
-                    newEntry.Username = username;
-                    newEntry.Score = score;
-                    leaderboards.Add(newEntry);
-                    SaveDataToFile("LEADERBOARDS");
-                }
-                BubbleSort(leaderboards.Count);
-            }
-        }
-        public void BubbleSort(int size)
-        {
-            for (int i = 0; i < size - 1; i++)
-            {
-                for (int j = 0; j < size - 1 - i; j++)
-                {
-                    if (leaderboards[j].Score < leaderboards[j + 1].Score)
-                    {
-                        var temp = leaderboards[j];
-                        leaderboards[j] = leaderboards[j + 1];
-                        leaderboards[j + 1] = temp;
-                    }
-                }
-            }
         }
         public List<Leaderboards> GetLeaderboardAccounts()
         {
             return leaderboards;
         }
-        public List<string> DisplayPlayerHistory(string username)
+        public List<GameAccounts> GetPlayerAccounts()
         {
-            foreach (var accounts in account)
-            {
-                if (accounts.Username == username)
-                {
-                    return accounts.History;
-                }
-            }
-            return null;
+            return account;
         }
-        
-        public string GetPlayerName(string username)
+        public List<AdminData> GetAdminAccounts()
         {
-            foreach (var accounts in account)
-            {
-                if (accounts.Username == username)
-                {
-                    return accounts.Name;
-                }
-            }
-            return null;
-        }
-        public string GetPlayerUsername(string name)
-        {
-            foreach (var accounts in account)
-            {
-                if (accounts.Name == name)
-                {
-                    return accounts.Username;
-                }
-            }
-            return null;
+            return admin;
         }
         private void SaveDataToFile(string saveTo)
         {
@@ -230,20 +48,87 @@ namespace ShuffledWordGameDL
                 { WriteIndented = true });
                 File.WriteAllText(filePath, json);
             }
-            else if(saveTo == "LEADERBOARDS")
+            else if (saveTo == "LEADERBOARDS")
             {
                 string json = JsonSerializer.Serialize(leaderboards, new JsonSerializerOptions
                 { WriteIndented = true });
                 File.WriteAllText(leaderboardsFilePath, json);
             }
         }
-        public List<string> DisplayWord()
+        private void GetDataFromFile()
         {
-            return admin[0].ArrangedWord;
+            string jsonText = File.ReadAllText(filePath);
+            account = JsonSerializer.Deserialize<List<GameAccounts>>(jsonText,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+            );
         }
-        public int TotalWords()
+        private void GetAdminDataFromFile()
         {
-            return admin[0].ArrangedWord.Count;
+            string jsonText = File.ReadAllText(adminFilePath);
+            admin = JsonSerializer.Deserialize<List<AdminData>>(jsonText,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+            );
+            admin[0].ShuffledWord.Clear();
+        }
+        private void GetLeaderboardsFromFile()
+        {
+            string jsonText = File.ReadAllText(leaderboardsFilePath);
+            leaderboards = JsonSerializer.Deserialize<List<Leaderboards>>(jsonText,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+            );
+        }
+        public void AddScoreList(string username, int score, int error)
+        {
+            int index = FindAccountIndex(username);
+            account[index].Score.Add(score);
+            account[index].History.Add("Score : " + score + " | Error : " + error + "\n");
+            SaveDataToFile("PLAYER");
+        }
+        public bool ChangePassword(string username, string old_password, string new_password)
+        {
+            int index = FindAccountIndex(username);
+            if (index != -1)
+            {
+                if (account[index].Password == old_password)
+                {
+                    account[index].Password = new_password;
+                    SaveDataToFile("PLAYER");
+                    return true;
+                }
+            }
+            return false;
+        }
+        public void ClearLeaderboard()
+        {
+            leaderboards.Clear();
+            foreach(var accounts in account)
+            {
+                accounts.Score.Clear();
+                accounts.History.Clear();
+            }
+            SaveDataToFile("LEADERBOARDS");
+            SaveDataToFile("PLAYER");
+        }
+        public int FindAccountIndex(string username)
+        {
+            for (int i = 0; i < account.Count; i++)
+            {
+                if (account[i].Username == username)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+        public void CreateAccount(string name, string username, string password)
+        {
+            account.Add(new GameAccounts
+            {
+                Name = name,
+                Username = username,
+                Password = password
+            });
+            SaveDataToFile("PLAYER");
         }
         public bool RemoveWord(int index)
         {
@@ -257,25 +142,11 @@ namespace ShuffledWordGameDL
             }
             return false;
         }
-        public string ShuffledWord(int index)
-        {
-            return admin[0].ShuffledWord[index];
-        }
-        public string ArrangedWord(int index)
-        {
-            return admin[0].ArrangedWord[index];
-        }
-        public List<AdminData> GetAdminAccounts()
-        {
-            return admin;
-        }
-
         public bool InsertNewWords(string arrangedWord)
         {
             if (!admin[0].ArrangedWord.Contains(arrangedWord))
             {
                 admin[0].ArrangedWord.Add(arrangedWord);
-                Shuffle(arrangedWord);
                 return true;
             }
             return false;
@@ -289,6 +160,37 @@ namespace ShuffledWordGameDL
                 return true;
             }
             return false;
+        }
+        public bool InsertShuffledWord(string shuffledWord)
+        {
+            if (!admin[0].ShuffledWord.Contains(shuffledWord))
+            {
+
+                admin[0].ShuffledWord.Add(shuffledWord);
+                SaveDataToFile("ADMIN");
+                return true;
+            }
+            return false;
+        }
+        public void AddToLeaderboard(Leaderboards accountData)
+        {
+            bool playerExists = false;
+
+            foreach (var leaderboard in leaderboards)
+            {
+                if (leaderboard.Username == accountData.Username)
+                {
+                    leaderboard.Score = accountData.Score; 
+                    playerExists = true; 
+                    break; 
+                }
+            }
+            if (!playerExists)
+            {
+                leaderboards.Add(accountData);
+            }
+
+            SaveDataToFile("LEADERBOARDS");
         }
     }
 }

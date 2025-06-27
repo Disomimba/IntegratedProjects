@@ -11,10 +11,32 @@ namespace ShuffledWordGameBL
         static int lives = 3;
         static int questionShuffler;
         static ShuffledWordDataLogic DataLogic = new ShuffledWordDataLogic();
-
-
         static List<int> givenIndex = new List<int>();
-        
+        public GameBL()
+        {
+            Shuffle();
+        }
+        public void Shuffle()
+        {
+            int i = 0;
+            foreach (var word in GetAdminAccounts()[0].ArrangedWord)
+            {
+                char[] wordToChar = word.ToString().ToCharArray(); 
+                List<char> lettersChar = new List<char>(wordToChar);
+                Random numberRandom = new Random();
+                string wordShuffled = "";
+
+                while (0 < lettersChar.Count)
+                {
+                    int randomIndex = numberRandom.Next(lettersChar.Count);
+                    wordShuffled += lettersChar[randomIndex];
+                    lettersChar.RemoveAt(randomIndex);
+                }
+
+                DataLogic.InsertShuffledWord(wordShuffled);
+                i++;
+            }
+        }
         public bool RemoveWords(int index)
         {
             return DataLogic.RemoveWord(index);
@@ -36,9 +58,9 @@ namespace ShuffledWordGameBL
         {
             return lives;
         }
-        public static int TotalWords()
+        public int TotalWords()
         {
-            return DataLogic.TotalWords();
+            return GetAdminAccounts()[0].ArrangedWord.Count;
         }
         public static void Reset()
         {
@@ -46,7 +68,68 @@ namespace ShuffledWordGameBL
             lives = 3;
             score = 0;
         }
-        public static void RandomizerQuestion()
+        public void FindPlayerHighScore(string username)
+        {
+            int playerHighScore = 0;
+            foreach (var accounts in GetAccounts())
+            {
+                if (accounts.Username == username)
+                {
+                    playerHighScore = accounts.Score.Max();
+                    TopPlayers(username, playerHighScore);
+                }
+            }
+        }
+        public void TopPlayers(string username, int score)
+        {
+            if (score > 0)
+            {
+                bool playerExists = false;
+
+                foreach (var leaderboard in GetLeaderboardAccounts())
+                {
+                    if (leaderboard.Username == username)
+                    {
+                        playerExists = true;
+                        if (score > leaderboard.Score)
+                        {
+                            leaderboard.Score = score;
+                            DataLogic.AddToLeaderboard(leaderboard);
+                        }
+                        break;
+                    }
+                }
+
+                if (!playerExists)
+                {
+                    var accountData = new Leaderboards
+                    {
+                        Username = username,
+                        Score = score
+                    };
+                    DataLogic.AddToLeaderboard(accountData);
+                }
+                BubbleSort(GetLeaderboardAccounts().Count());
+            }
+
+        }
+        public void BubbleSort(int size)
+        {
+            var leaderboards = GetLeaderboardAccounts();
+            for (int i = 0; i < size - 1; i++)
+            {
+                for (int j = 0; j < size - 1 - i; j++)
+                {
+                    if (leaderboards[j].Score < leaderboards[j + 1].Score)
+                    {
+                        var temp = leaderboards[j];
+                        leaderboards[j] = leaderboards[j + 1];
+                        leaderboards[j + 1] = temp;
+                    }
+                }
+            }
+        }
+        public  void RandomizerQuestion()
         {
             Random questionRandom = new Random();
 
@@ -62,21 +145,13 @@ namespace ShuffledWordGameBL
             }
             givenIndex.Add(questionShuffler);
         }
-        public static string QuestionsList()
-        {
-            return DataLogic.ShuffledWord(questionShuffler);
-        }
-        public static string AnswersList()
-        {
-            return DataLogic.ArrangedWord(questionShuffler);
-        }
         public static bool AddShuffledWords(string newAnswer)
         {
             return DataLogic.InsertNewWord(newAnswer);
         }
-        public static List<string> ShowWord()
+        public List<string> ShowWord()
         {
-            return DataLogic.DisplayWord();
+            return GetAdminAccounts()[0].ArrangedWord;
         }
         public static bool MenuValidator(Actions userAction, int number)
         {
@@ -143,13 +218,27 @@ namespace ShuffledWordGameBL
             }
             return result;
         }
-        public string PlayerName(string Username)
+        public string GetPlayerName(string Username)
         {
-            return DataLogic.GetPlayerName(Username);
+            foreach (var accounts in GetAccounts())
+            {
+                if (accounts.Username == Username)
+                {
+                    return accounts.Name;
+                }
+            }
+            return null;
         }
         public List<string> ShowPlayerHistory(string user)
         {
-            return DataLogic.DisplayPlayerHistory(user);
+            foreach(var accounts in GetAccounts())
+            {
+                if (accounts.Username == user)
+                {
+                    return accounts.History;
+                }
+            }
+            return null;
         }
         public List<Leaderboards> GetLeaderboardAccounts()
         {
@@ -163,19 +252,26 @@ namespace ShuffledWordGameBL
         {
             return DataLogic.ChangePassword(username, oldPassword, newPassword);
         }
-        public List<ShuffledWordGameCommon.GameAccounts> GetAccounts()
+        public List<GameAccounts> GetAccounts()
         {
             return DataLogic.GetPlayerAccounts();
         }
-        public List<ShuffledWordGameCommon.AdminData> GetAdminAccounts()
+        public List<AdminData> GetAdminAccounts()
         {
             return DataLogic.GetAdminAccounts();
         }
-
+        public string DisplayQuestion()
+        {
+            return GetAdminAccounts()[0].ShuffledWord[questionShuffler];
+        }
+        public string AnswerList()
+        {
+            return GetAdminAccounts()[0].ArrangedWord[questionShuffler];
+        }
         public bool VerifyAccountExisting(string username)
         {
             
-            List<ShuffledWordGameCommon.GameAccounts> accounts = GetAccounts();
+            List<GameAccounts> accounts = GetAccounts();
             if (!username.Contains("ADMIN"))
             {
 
@@ -226,7 +322,14 @@ namespace ShuffledWordGameBL
         }
         public string GetPlayerUsername(string name)
         {
-            return DataLogic.GetPlayerUsername(name);
+            foreach (var accounts in GetAccounts())
+            {
+                if (accounts.Name == name)
+                {
+                    return accounts.Username;
+                }
+            }
+            return null;    
         }
         public void UpdatePlayerHistory(string name)
         {
@@ -236,6 +339,7 @@ namespace ShuffledWordGameBL
             
             string user = GetPlayerUsername(name);
             DataLogic.AddScoreList(user, score, error);
+            FindPlayerHighScore(user);
         }
     }
 

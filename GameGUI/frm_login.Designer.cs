@@ -155,6 +155,9 @@
             Controls.Add(btn_login);
             Controls.Add(txt_password);
             Controls.Add(txt_username);
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "frm_login";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Login";

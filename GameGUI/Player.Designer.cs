@@ -52,9 +52,9 @@
             btn_back = new Button();
             pnl_history = new Panel();
             pnl_history_small = new Panel();
+            lb_score_error = new ListBox();
             label7 = new Label();
             btn_history_back = new Button();
-            lb_score_error = new ListBox();
             pnl_changePass.SuspendLayout();
             pnl_mechanics.SuspendLayout();
             pnl_history.SuspendLayout();
@@ -101,7 +101,7 @@
             // btn_mechanics
             // 
             btn_mechanics.BackColor = Color.Transparent;
-            btn_mechanics.BackgroundImage = Properties.Resources.btn_home_normal;
+            btn_mechanics.BackgroundImage = Properties.Resources.btn_mechanics_normal;
             btn_mechanics.BackgroundImageLayout = ImageLayout.Stretch;
             btn_mechanics.FlatAppearance.BorderSize = 0;
             btn_mechanics.FlatAppearance.MouseDownBackColor = Color.Transparent;
@@ -365,6 +365,15 @@
             pnl_history_small.Size = new Size(244, 136);
             pnl_history_small.TabIndex = 9;
             // 
+            // lb_score_error
+            // 
+            lb_score_error.FormattingEnabled = true;
+            lb_score_error.ItemHeight = 15;
+            lb_score_error.Location = new Point(0, 0);
+            lb_score_error.Name = "lb_score_error";
+            lb_score_error.Size = new Size(244, 139);
+            lb_score_error.TabIndex = 10;
+            // 
             // label7
             // 
             label7.BackColor = Color.Transparent;
@@ -391,15 +400,6 @@
             btn_history_back.UseVisualStyleBackColor = false;
             btn_history_back.Click += btn_history_back_Click;
             // 
-            // lb_score_error
-            // 
-            lb_score_error.FormattingEnabled = true;
-            lb_score_error.ItemHeight = 15;
-            lb_score_error.Location = new Point(0, 0);
-            lb_score_error.Name = "lb_score_error";
-            lb_score_error.Size = new Size(244, 139);
-            lb_score_error.TabIndex = 10;
-            // 
             // frm_player
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -416,6 +416,9 @@
             Controls.Add(btn_mechanics);
             Controls.Add(btn_history);
             Controls.Add(btn_play);
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "frm_player";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Player";

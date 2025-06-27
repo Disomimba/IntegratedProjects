@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frm_game));
             lbl_shuffledWord = new Label();
             txt_answer = new TextBox();
             lbl_lives = new Label();
@@ -93,6 +94,7 @@
             btn_music.Name = "btn_music";
             btn_music.Size = new Size(50, 50);
             btn_music.TabIndex = 5;
+            btn_music.TabStop = false;
             btn_music.UseVisualStyleBackColor = false;
             btn_music.Click += btn_music_Click;
             // 
@@ -108,6 +110,9 @@
             Controls.Add(txt_answer);
             Controls.Add(lbl_shuffledWord);
             DoubleBuffered = true;
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "frm_game";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Game";

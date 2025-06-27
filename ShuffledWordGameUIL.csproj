@@ -11,14 +11,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="GameGUI\**" />
     <Compile Remove="ShuffledWordGameBL\**" />
     <Compile Remove="ShuffledWordGameDL\**" />
     <Compile Remove="ShuffleGameCommon\**" />
     <Compile Remove="ShuffleWordGameAPI\**" />
+    <EmbeddedResource Remove="GameGUI\**" />
     <EmbeddedResource Remove="ShuffledWordGameBL\**" />
     <EmbeddedResource Remove="ShuffledWordGameDL\**" />
     <EmbeddedResource Remove="ShuffleGameCommon\**" />
     <EmbeddedResource Remove="ShuffleWordGameAPI\**" />
+    <None Remove="GameGUI\**" />
     <None Remove="ShuffledWordGameBL\**" />
     <None Remove="ShuffledWordGameDL\**" />
     <None Remove="ShuffleGameCommon\**" />

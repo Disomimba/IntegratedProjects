@@ -13,7 +13,7 @@ namespace ShuffleWordGameAPI.Controllers
         [HttpGet("Get Words")]
         public IEnumerable<string> GetWords()
         {
-            return GameBL.ShowWord();
+            return BusinessProcess.ShowWord();
         }
         [HttpPost("Add Word")]
         public bool AddWord(string newWord)

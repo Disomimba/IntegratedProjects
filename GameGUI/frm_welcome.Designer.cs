@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frm_welcome));
             lbl_welcome = new Label();
             btn_start = new Button();
             btn_register = new Button();
@@ -120,6 +121,9 @@
             Controls.Add(btn_register);
             Controls.Add(btn_start);
             Controls.Add(lbl_welcome);
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "frm_welcome";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Mekus-Mekus";

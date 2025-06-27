@@ -11,7 +11,5 @@ namespace ShuffledWordGameCommon
     {
         public int Score { get; set;}
         public string Username { get; set; }
-
-       
     }
 }

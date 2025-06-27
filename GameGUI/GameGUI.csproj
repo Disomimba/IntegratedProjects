@@ -15,13 +15,13 @@
 
   <ItemGroup>
     <Reference Include="ShuffledWordGameBL">
-      <HintPath>..\..\..\Documents\GitHub\IntegratedProjects\ShuffledWordGameBL\bin\Debug\net8.0\ShuffledWordGameBL.dll</HintPath>
+      <HintPath>..\ShuffledWordGameBL\bin\Debug\net8.0\ShuffledWordGameBL.dll</HintPath>
     </Reference>
     <Reference Include="ShuffledWordGameCommon">
-      <HintPath>..\..\..\Documents\GitHub\IntegratedProjects\ShuffledWordGameBL\bin\Debug\net8.0\ShuffledWordGameCommon.dll</HintPath>
+      <HintPath>..\ShuffledWordGameBL\bin\Debug\net8.0\ShuffledWordGameCommon.dll</HintPath>
     </Reference>
     <Reference Include="ShuffledWordGameDL">
-      <HintPath>..\..\..\Documents\GitHub\IntegratedProjects\ShuffledWordGameBL\bin\Debug\net8.0\ShuffledWordGameDL.dll</HintPath>
+      <HintPath>..\ShuffledWordGameBL\bin\Debug\net8.0\ShuffledWordGameDL.dll</HintPath>
     </Reference>
   </ItemGroup>
 

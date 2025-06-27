@@ -28,7 +28,7 @@ namespace GameGUI
             var resultAdmin = BusinessLogic.VerifyAdminAccount(username, password);
             if (resultPlayer)
             {
-                string playerName = BusinessLogic.PlayerName(username);
+                string playerName = BusinessLogic.GetPlayerName(username);
                 frm_player player = new frm_player(playerName);
                 player.Show();
                 this.Close();

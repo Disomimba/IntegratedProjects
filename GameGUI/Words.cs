@@ -26,7 +26,7 @@ namespace GameGUI
         public void ShowWords()
         {
             listBox_words.Items.Clear();
-            foreach (var ShowWords in GameBL.ShowWord())
+            foreach (var ShowWords in BusinessLogic.ShowWord())
             {
                 listBox_words.Items.Add(ShowWords);
             }
@@ -53,9 +53,9 @@ namespace GameGUI
         private void listBox_words_SelectedIndexChanged(object sender, EventArgs e)
         {
             int index = listBox_words.SelectedIndex;
-            if (index >= 0 && index < GameBL.TotalWords())
+            if (index >= 0 && index < BusinessLogic.TotalWords())
             {
-                var wordSelected = GameBL.ShowWord();
+                var wordSelected = BusinessLogic.ShowWord();
                 txt_word.Text = wordSelected[index];
             }
         }

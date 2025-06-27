@@ -22,13 +22,29 @@ namespace ShuffledWordGameDL
             sqlConnection = new SqlConnection(connectionString);
             GetDataFromDB();
         }
+        public void StoreLeaderboards()
+        {
+            sqlConnection.Open();
+            string delete = "Delete From tbl_leaderboards";
+            SqlCommand deleteCommand = new SqlCommand(delete, sqlConnection);
+            deleteCommand.ExecuteNonQuery();
+            foreach (var leaderboard in leaderboards)
+            {
+                string insert = "Insert into tbl_leaderboards (Username, Score) values (@username, @score)";
+                SqlCommand insertCommand = new SqlCommand(insert, sqlConnection);
+                insertCommand.Parameters.AddWithValue("@username", leaderboard.Username);
+                insertCommand.Parameters.AddWithValue("@score", leaderboard.Score);
+                insertCommand.ExecuteNonQuery();
+            }
+            sqlConnection.Close();
+        }
         private void GetDataFromDB()
         {
             GameAccountsFromDB();
             ScoresErrorHistoryFromDB();
             AdminDataFromDB();
             GetWordsFromDB();
-            FindPlayerHighScore();
+            GetLeaderboardFromDB();
         }
         public void GameAccountsFromDB()
         {
@@ -100,31 +116,25 @@ namespace ShuffledWordGameDL
             while (reader.Read())
             {
                 admin[0].ArrangedWord.Add(reader["Words"].ToString());
-                Shuffle(reader["Words"].ToString());
 
             }
             sqlConnection.Close();
         }
-        public void Shuffle(string word)
+        public void GetLeaderboardFromDB()
         {
-            char[] wordToChar = word.ToCharArray();
-            List<char> lettersChar = new List<char>(wordToChar);
-            Random numberRandom = new Random();
-            string wordShuffled = "";
-
-            while (0 < lettersChar.Count)
+            sqlConnection.Open();
+            string selectLeaderboards = "Select Username, Score from tbl_leaderboards";
+            SqlCommand selectCommand = new SqlCommand(selectLeaderboards, sqlConnection);
+            SqlDataReader reader = selectCommand.ExecuteReader();
+            while (reader.Read())
             {
-                int randomIndex = numberRandom.Next(lettersChar.Count);
-                wordShuffled += lettersChar[randomIndex];
-                lettersChar.RemoveAt(randomIndex);
+                leaderboards.Add(new Leaderboards
+                {
+                    Username = reader["Username"].ToString(),
+                    Score = Convert.ToInt32(reader["Score"])
+                });
             }
-
-            admin[0].ShuffledWord.Add(wordShuffled);
-
-        }
-        public List<string> DisplayWord()
-        {
-            return admin[0].ArrangedWord;
+            sqlConnection.Close();
         }
         public bool RemoveWord(int index)
         {
@@ -146,10 +156,6 @@ namespace ShuffledWordGameDL
             {
                 return false;
             }
-        }
-        public int TotalWords()
-        {
-            return admin[0].ArrangedWord.Count();
         }
         public List<GameAccounts> GetPlayerAccounts()
         {
@@ -178,7 +184,6 @@ namespace ShuffledWordGameDL
             sqlConnection.Close();
             int index = FindPlayerIndex(username);
             account[index].Score.Add(score);
-            FindPlayerHighScore();
             AddHistory(username, score, error);
         }
         public void AddHistory(string username, int score, int error)
@@ -194,79 +199,7 @@ namespace ShuffledWordGameDL
             int index = FindPlayerIndex(username);
             account[index].History.Add($"Score : {score} | Error : {error}");
         }
-        public void FindPlayerHighScore()
-        {
-            foreach (var accounts in account)
-            {
-                string username = accounts.Username;
-                if (accounts.Score.Any())
-                {
-                    int playerHighScore = accounts.Score.Max();
-                    TopPlayers(username, playerHighScore);
-                }
-            }
-        }
-        public void TopPlayers(string username, int score)
-        {
-            if (score > 0)
-            {
-                bool playerExists = false;
-                for (int i = 0; i < leaderboards.Count; i++)
-                {
-                    if (leaderboards[i].Username == username)
-                    {
-                        playerExists = true;
-                        if (score > leaderboards[i].Score)
-                        {
-                            leaderboards[i].Score = score;
-                        }
-                        break;
-                    }
-                }
-
-                if (!playerExists)
-                {
-                    leaderboards.Add(new Leaderboards
-                    {
-                        Username = username,
-                        Score = score
-                    });
-                    StoreLeaderboards();
-                }
-                BubbleSort(leaderboards.Count);
-            }
-        }
-        public void BubbleSort(int size)
-        {
-            for (int i = 0; i < size - 1; i++)
-            {
-                for (int j = 0; j < size - 1 - i; j++)
-                {
-                    if (leaderboards[j].Score < leaderboards[j + 1].Score)
-                    {
-                        var temp = leaderboards[j];
-                        leaderboards[j] = leaderboards[j + 1];
-                        leaderboards[j + 1] = temp;
-                    }
-                }
-            }
-        }
-        public void StoreLeaderboards()
-        {
-            sqlConnection.Open();
-            string delete = "Delete From tbl_leaderboards";
-            SqlCommand deleteCommand = new SqlCommand(delete, sqlConnection);
-            deleteCommand.ExecuteNonQuery();
-            foreach (var leaderboard in leaderboards)
-            {
-                string insert = "Insert into tbl_leaderboards (Username, Score) values (@username, @score)";
-                SqlCommand insertCommand = new SqlCommand(insert, sqlConnection);
-                insertCommand.Parameters.AddWithValue("@username", leaderboard.Username);
-                insertCommand.Parameters.AddWithValue("@score", leaderboard.Score);
-                insertCommand.ExecuteNonQuery();
-            }
-            sqlConnection.Close();
-        }
+       
         public bool ChangePassword(string username, string old_password, string new_password)
         {
             sqlConnection.Open();
@@ -330,43 +263,6 @@ namespace ShuffledWordGameDL
         {
             return leaderboards;
         }
-        public List<string> DisplayPlayerHistory(string username)
-        {
-            foreach (var accounts in account)
-            {
-                if (accounts.Username == username)
-                {
-                    return accounts.History;
-                }
-            }
-            return null;
-        }
-        public string GetPlayerName(string username)
-        {
-
-            foreach (var accounts in account)
-            {
-                if (accounts.Username == username)
-                {
-                    return accounts.Name;
-                }
-            }
-            return null;
-
-        }
-        public string GetPlayerUsername(string name)
-        {
-
-            foreach (var accounts in account)
-            {
-                if (accounts.Name == name)
-                {
-                    return accounts.Username;
-                }
-            }
-            return null;
-
-        }
         public bool ChangeAdminPassword(string oldPassword, string newPassword)
         {
             sqlConnection.Open();
@@ -407,18 +303,50 @@ namespace ShuffledWordGameDL
                 insertCommand.ExecuteNonQuery();
                 sqlConnection.Close();
                 admin[0].ArrangedWord.Add(arrangedWord);
-                Shuffle(arrangedWord);
                 return true;
             }
             return false;
         }
-        public string ShuffledWord(int index)
+        public bool InsertShuffledWord(string shuffledWord)
         {
-            return admin[0].ShuffledWord[index];
+            if (!admin[0].ShuffledWord.Contains(shuffledWord))
+            {
+                admin[0].ShuffledWord.Add(shuffledWord);
+                return true;
+            }
+            return false;
         }
-        public string ArrangedWord(int index)
+        public void AddToLeaderboard(Leaderboards accountData)
         {
-            return admin[0].ArrangedWord[index];
+            bool playerExist = false;
+            foreach (var leaderboard in leaderboards)
+            {
+                if (leaderboard.Username == accountData.Username)
+                {
+                    playerExist = true;
+                    sqlConnection.Open();
+                    string update = "Update tbl_leaderboards set Score = @score where Username = @username";
+                    SqlCommand updateCommand = new SqlCommand(update, sqlConnection);
+                    updateCommand.Parameters.AddWithValue("@score", accountData.Score);
+                    updateCommand.Parameters.AddWithValue("@username", accountData.Username);
+                    updateCommand.ExecuteNonQuery();
+                    sqlConnection.Close();
+                    leaderboard.Score = accountData.Score; 
+                }
+            }
+            if (!playerExist)
+            {
+                sqlConnection.Open();
+                string insert = "Insert into tbl_leaderboards (Username, Score) values (@username, @score)";
+                SqlCommand insertCommand = new SqlCommand(insert, sqlConnection);
+                insertCommand.Parameters.AddWithValue("@username", accountData.Username);
+                insertCommand.Parameters.AddWithValue("@score", accountData.Score);
+                insertCommand.ExecuteNonQuery();
+                sqlConnection.Close();
+                leaderboards.Add(accountData);
+
+            }
         }
-    }
+        
+}
 }

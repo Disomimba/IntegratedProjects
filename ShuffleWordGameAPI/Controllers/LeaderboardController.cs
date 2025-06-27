@@ -16,7 +16,7 @@ namespace ShuffleWordGameAPI.Controllers
         {
             return BusinessProcess.GetLeaderboardAccounts();
         }
-        [HttpDelete("Clear Leaderboard")]
+        [HttpDelete("End Season")]
         public void RemoveLeaderboardEntry()
         {
              BusinessProcess.ClearLeaderboard();

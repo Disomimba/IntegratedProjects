@@ -1,6 +1,7 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using ShuffledWordGameBL;
 using ShuffledWordGameDL;
+using System;
 using System.Net.NetworkInformation;
 using System.Security.Principal;
 using System.Xml.Linq;
@@ -9,17 +10,15 @@ namespace Project_1
     internal class Program
     {
         static GameBL BusinessLogic = new GameBL();
-        static string password = string.Empty;
-
         static void Main(string[] args)
         {
-            File.Create("accounts.json");
             Console.WriteLine("Welcome to Mekus Mekus Game");
             WelcomePage();
             BusinessLogic.GetAccounts();
         }
         static void WelcomePage()
         {
+            Console.Clear();
             int action;
             do
             {
@@ -29,7 +28,7 @@ namespace Project_1
                     "[3] Leaderboards\n" +
                     "[4] Exit");
                 Console.Write("Enter Action : ");
-                string? input = Console.ReadLine();
+                string input = Console.ReadLine();
                 if (int.TryParse(input, out action) && GameBL.WelcomeMenuValidator(action))
                 {
                     switch (action)
@@ -106,12 +105,13 @@ namespace Project_1
             }
             else if (Account == "Player")
             {
-                string playerName = BusinessLogic.PlayerName(username);
+                string playerName = BusinessLogic.GetPlayerName(username);
                 Player(playerName);
             }
         }
         static void AdminMenu(string pin)
         {
+            int action;
             while (true)
             {
                 Console.Clear();
@@ -123,10 +123,10 @@ namespace Project_1
                     "[4] Remove Word\n" +
                     "[5] Change Admin Password\n" +
                     "[6] Exit\nEnter Action : ");
-                int adminAction = Convert.ToInt16(Console.ReadLine());
-                if (GameBL.MenuValidator(Actions.Admin, adminAction))
+                string adminAction = Console.ReadLine();
+                if (int.TryParse(adminAction, out action) && GameBL.MenuValidator(Actions.Admin, action))
                 {
-                    switch (adminAction)
+                    switch (action)
                     {
                         case 1:
                             Console.WriteLine("---------------------");
@@ -148,9 +148,10 @@ namespace Project_1
                             ChangeAdminPassword(pin);
                             break;
                         case 6:
+
+                            Console.Clear();
                             WelcomePage();
                             break;
-
                     }
                 }
                 else
@@ -182,7 +183,7 @@ namespace Project_1
 
             Console.WriteLine("Words");
             int i = 1;
-            foreach(var word in GameBL.ShowWord())
+            foreach(var word in BusinessLogic.ShowWord())
             {
                 Console.WriteLine($"{i}. {word}");
                 i++;
@@ -235,7 +236,7 @@ namespace Project_1
             Console.WriteLine("---------------------");
             Console.WriteLine("Words");
             int i = 1;
-            foreach (var word in GameBL.ShowWord())
+            foreach (var word in BusinessLogic.ShowWord())
             {
                 Console.WriteLine($"{i}. {word}");
                 i++;
@@ -325,6 +326,7 @@ namespace Project_1
             foreach (var history in BusinessLogic.ShowPlayerHistory(user))
             {
                 Console.WriteLine(history);
+
             }
             Console.WriteLine("\nPress any key to go back");
             Console.ReadKey();
@@ -334,7 +336,7 @@ namespace Project_1
             Console.WriteLine("---------------------");
             Console.WriteLine($"{name}, you have {GameBL.Lives()} tries.");
 
-            for (int i = 0; i <= GameBL.TotalWords() - 1 && GameBL.Lives() > 0; i++)
+            for (int i = 0; i <= BusinessLogic.TotalWords() - 1 && GameBL.Lives() > 0; i++)
             {
                 Game(i);
             }
@@ -343,11 +345,11 @@ namespace Project_1
         }
         static void Game(int i)
         {
-            GameBL.RandomizerQuestion();
+            BusinessLogic.RandomizerQuestion();
             Console.WriteLine($"\nShuffled Word no. {i + 1}");
-            Console.WriteLine($"\nArrange the letters\n{GameBL.QuestionsList()}\n");
+            Console.WriteLine($"\nArrange the letters\n{BusinessLogic.DisplayQuestion()}\n");
             string answer = Console.ReadLine().ToUpper();
-            if (answer == GameBL.AnswersList())
+            if (answer == BusinessLogic.AnswerList())
             {
                 Console.WriteLine("\nCORRECT! : GUESS");
                 Console.WriteLine("---------------------");
@@ -368,7 +370,7 @@ namespace Project_1
         }
         static void DisplayFinalScore(string name)
         {
-            Console.WriteLine($"Your Score is: {GameBL.ShowScore()} out of {GameBL.TotalWords()}");
+            Console.WriteLine($"Your Score is: {GameBL.ShowScore()} out of {BusinessLogic.TotalWords()}");
             Console.Write("\n\nDo you want to try again? (type Y to Continue):");
             string playAgain = Console.ReadLine().ToUpper();
             if (playAgain == "Y")
@@ -386,6 +388,8 @@ namespace Project_1
         }
         static void Leaderboards()
         {
+
+            Console.Clear();
             Console.WriteLine("---------------------");
             Console.WriteLine("LEADERBOARDS");
             foreach(var player in BusinessLogic.GetLeaderboardAccounts())

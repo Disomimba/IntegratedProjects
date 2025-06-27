@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frm_admin));
             btn_quit = new Button();
             btn_leaderboards = new Button();
             btn_changePass = new Button();
@@ -237,6 +238,9 @@
             Controls.Add(btn_changePass);
             Controls.Add(btn_words);
             Controls.Add(lbl_welcome);
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "frm_admin";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Admin";

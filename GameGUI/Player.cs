@@ -38,8 +38,8 @@ namespace GameGUI
         private void btn_history_Click(object sender, EventArgs e)
         {
             string user = BusinessLogic.GetPlayerUsername(pangalan);
-
-            foreach(var ShowHistory in BusinessLogic.ShowPlayerHistory(user))
+            lb_score_error.Items.Clear();
+            foreach (var ShowHistory in BusinessLogic.ShowPlayerHistory(user))
             {
 
                 lb_score_error.Items.Add(ShowHistory);

@@ -20,29 +20,22 @@ namespace ShuffledWordGameDL
                 Username = "ADMIN",
                 Password = "admin123"
             });
+            account.Add(new GameAccounts
+            {
+                Name = "Abdul Malik",
+                Username = "ABDUL",
+                Password = "abdul123"
+            });
+            account.Add(new GameAccounts
+            {
+                Name = "Shork",
+                Username = "SHORK",
+                Password = "shork123"
+            });
             string[] defaultWords = { "CASH", "EAGLE", "BRIGHT", "BOUGHT", "SARCASM" };
             foreach (var word in defaultWords)
             {
-                admin[0].ArrangedWord.Add(word);
-                Shuffle(word);
-            }
-        }
-        public void Shuffle(string word)
-        {
-            char[] wordToChar = word.ToCharArray();
-            List<char> lettersChar = new List<char>(wordToChar);
-            Random numberRandom = new Random();
-            string wordShuffled = "";
-
-            while (0 < lettersChar.Count)
-            {
-                int randomIndex = numberRandom.Next(lettersChar.Count);
-                wordShuffled += lettersChar[randomIndex];
-                lettersChar.RemoveAt(randomIndex);
-            }
-
-            admin[0].ShuffledWord.Add(wordShuffled);
-
+                admin[0].ArrangedWord.Add(word);            }
         }
         public List<GameAccounts> GetPlayerAccounts()
         {
@@ -84,109 +77,17 @@ namespace ShuffledWordGameDL
                     accounts.Score.Sort();
                     accounts.Score.Reverse();
                     accounts.History.Add($"Score : {score} | Error : {error}\n");
-                    FindPlayerHighScore(username);
+                    
                 }
             }
         }
-        public void FindPlayerHighScore(string username)
+        public void AddToLeaderboard(Leaderboards accountData)
         {
-            int playerHighScore = 0;
-            foreach (var accounts in account)
-            {
-                if (accounts.Username == username)
-                {
-
-                    playerHighScore = accounts.Score.Max();
-                    TopPlayers(username, playerHighScore);
-                }
-            }
-        }
-        public void TopPlayers(string username, int score)
-        {
-            if (score > 0)
-            {
-                bool playerExists = false;
-
-                foreach (var leaderboard in leaderboards)
-                {
-                    if (leaderboard.Username == username)
-                    {
-                        playerExists = true;
-                        if (score > leaderboard.Score)
-                        {
-                            leaderboard.Score = score;
-                        }
-                        break;
-                    }
-                }
-
-                if (!playerExists)
-                {
-                    leaderboards.Add(new Leaderboards
-                    {
-                        Score = score,
-                        Username = username
-                    });
-                }
-                BubbleSort(leaderboards.Count());
-            }
-
-        }
-        public void BubbleSort(int size)
-        {
-            for (int i = 0; i < size - 1; i++)
-            {
-                for (int j = 0; j < size - 1 - i; j++)
-                {
-                    if (leaderboards[j].Score < leaderboards[j + 1].Score)
-                    {
-                        var temp = leaderboards[j];
-                        leaderboards[j] = leaderboards[j + 1];
-                        leaderboards[j + 1] = temp;
-                    }
-                }
-            }
+            leaderboards.Add(accountData);
         }
         public List<Leaderboards> GetLeaderboardAccounts()
         {
             return leaderboards;
-        }
-        public List<string> DisplayPlayerHistory(string username)
-        {
-            foreach (var accounts in account)
-            {
-                if (accounts.Username == username)
-                {
-                    return accounts.History;
-                }
-            }
-            return null;
-        }
-        public string GetPlayerName(string username)
-        {
-
-            foreach (var accounts in account)
-            {
-                if (accounts.Username == username)
-                {
-                    return accounts.Name;
-                }
-            }
-            return null;
-
-        }
-        public string GetPlayerUsername(string name)
-        {
-
-            foreach (var accounts in account)
-            {
-                if (accounts.Name == name)
-                {
-                    return accounts.Username;
-                }
-            }
-            return null;
-
         }
         public void ClearLeaderboard()
         {
@@ -202,21 +103,19 @@ namespace ShuffledWordGameDL
             if (!admin[0].ArrangedWord.Contains(arrangedWord))
             {
                 admin[0].ArrangedWord.Add(arrangedWord);
-                Shuffle(arrangedWord);
                 return true;
             }
             return false;
         }
-        public List<string> DisplayWord()
+        public bool InsertShuffledWord(string shuffledWord)
         {
-            return admin[0].ArrangedWord;
+            if (!admin[0].ShuffledWord.Contains(shuffledWord))
+            {
+                admin[0].ShuffledWord.Add(shuffledWord);
+                return true;
+            }
+            return false;
         }
-
-        public int TotalWords()
-        {
-            return admin[0].ArrangedWord.Count();
-        }
-
         public bool RemoveWord(int index)
         {
             string word = admin[0].ArrangedWord[index];
@@ -231,16 +130,6 @@ namespace ShuffledWordGameDL
             {
                 return false;
             }
-        }
-
-        public string ShuffledWord(int index)
-        {
-            return admin[0].ShuffledWord[index];
-        }
-
-        public string ArrangedWord(int index)
-        {
-            return admin[0].ArrangedWord[index];
         }
         public List<AdminData> GetAdminAccounts()
         {

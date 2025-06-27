@@ -15,7 +15,7 @@ namespace GameGUI
 
     public partial class frm_game : Form
     {
-        static ShuffledWordGameBL.GameBL BusinessLogic = new ShuffledWordGameBL.GameBL();
+        static GameBL BusinessLogic = new GameBL();
         System.Media.SoundPlayer music = new System.Media.SoundPlayer(Properties.Resources.music_bg);
         private string pangalan;
         private bool playing = true;
@@ -25,8 +25,8 @@ namespace GameGUI
             InitializeComponent();
             pangalan = name;
             GameBL.Reset();
-            GameBL.RandomizerQuestion();
-            lbl_shuffledWord.Text = GameBL.QuestionsList();
+            BusinessLogic.RandomizerQuestion();
+            lbl_shuffledWord.Text = BusinessLogic.DisplayQuestion();
             txt_answer.Text = "";
             txt_answer.Clear();
             music.PlayLooping();
@@ -35,11 +35,11 @@ namespace GameGUI
         int currentQuestionIndex = 0;
         private async void btn_submit_Click(object sender, EventArgs e)
         {
-            if (currentQuestionIndex < GameBL.TotalWords() && GameBL.Lives() > 0)
+            if (currentQuestionIndex < BusinessLogic.TotalWords() && GameBL.Lives() > 0)
             {
                 string answer = txt_answer.Text.Trim().ToUpper();
 
-                if (answer == GameBL.AnswersList())
+                if (answer == BusinessLogic.AnswerList())
                 {
                     btn_submit.Enabled = false;
                     txt_answer.Text = "Correct!";
@@ -69,10 +69,10 @@ namespace GameGUI
                 }
 
                 currentQuestionIndex++;
-                if (currentQuestionIndex < GameBL.TotalWords() && GameBL.Lives() > 0)
+                if (currentQuestionIndex < BusinessLogic.TotalWords() && GameBL.Lives() > 0)
                 {
-                    GameBL.RandomizerQuestion();
-                    lbl_shuffledWord.Text = GameBL.QuestionsList();
+                    BusinessLogic.RandomizerQuestion();
+                    lbl_shuffledWord.Text = BusinessLogic.DisplayQuestion();
                     txt_answer.Clear();
                 }
                 else
@@ -102,7 +102,7 @@ namespace GameGUI
         }
         private void DisplayFinalScore(string name)
         {
-            MessageBox.Show($"Your Score is: {GameBL.ShowScore()} out of {GameBL.TotalWords()}");
+            MessageBox.Show($"Your Score is: {GameBL.ShowScore()} out of {BusinessLogic.TotalWords()}");
             BusinessLogic.UpdatePlayerHistory(name);
             music.Stop();
         }
