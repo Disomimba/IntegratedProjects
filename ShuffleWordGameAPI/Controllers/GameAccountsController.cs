@@ -6,6 +6,8 @@ namespace ShuffleWordGameAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
+
     public class GameAccountsController : ControllerBase
     {
         static GameBL BusinessProcess = new GameBL();
@@ -15,9 +17,28 @@ namespace ShuffleWordGameAPI.Controllers
             return BusinessProcess.GetAccounts();
         }
         [HttpPost("Add Player")]
-        public bool AddPlayer(string name, string username, string password)
+        public bool AddPlayer(string name, string email, string username, string password)
         {
-            return BusinessProcess.CreateAccount(name, username, password);
+            return BusinessProcess.CreateAccount(name, email, username, password);
+        }
+        [HttpPost("Forgot Password")] 
+        public bool OTPSender(string userEmail)
+        {
+            if (BusinessProcess.OTPSender(userEmail)) 
+            {
+                return true; 
+            }
+            return false; 
+        }
+        [HttpPatch("Verify OTP")] 
+        public bool VerifyOTP(string email, int otp, string newPassword)
+        {
+            if (BusinessProcess.OTPVerifier(otp)) 
+            {
+                BusinessProcess.ForgotPassword(newPassword, email);
+                return true; 
+            }
+            return false; 
         }
 
         [HttpPatch("Change Player Password")]

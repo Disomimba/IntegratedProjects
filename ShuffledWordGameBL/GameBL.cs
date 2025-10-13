@@ -10,11 +10,34 @@ namespace ShuffledWordGameBL
         static int score = 0;
         static int lives = 3;
         static int questionShuffler;
+        int otp;
         static ShuffledWordDataLogic DataLogic = new ShuffledWordDataLogic();
         static List<int> givenIndex = new List<int>();
         public GameBL()
         {
             Shuffle();
+        }
+
+        public bool OTPSender(string email)
+        {
+            Random OTPGenerator = new Random();
+            otp = OTPGenerator.Next(100000, 1000000);
+            string username = VerifyAccountExistingEmail(email);
+            EmailService emailService = new EmailService();
+            if (username != null)
+            {
+                emailService.SendEmail(username,otp, email);
+                return true;
+            }
+            return false;
+        }
+        public bool OTPVerifier(int OTP)
+        {
+            if (OTP == otp)
+            {
+                return true;
+            }
+            return false;
         }
         public void Shuffle()
         {
@@ -252,6 +275,11 @@ namespace ShuffledWordGameBL
         {
             return DataLogic.ChangePassword(username, oldPassword, newPassword);
         }
+        public bool ForgotPassword(string newPassword, string email)
+        {
+            
+            return DataLogic.ForgotPassword(newPassword, email);
+        }
         public List<GameAccounts> GetAccounts()
         {
             return DataLogic.GetPlayerAccounts();
@@ -285,7 +313,17 @@ namespace ShuffledWordGameBL
             }
             return false;
         }
-        public bool CreateAccount(string name, string username, string password)
+        public string VerifyAccountExistingEmail(string email)
+        {
+            foreach (var users in GetAccounts()) {
+                if (users.Email == email) {
+                    string username = users.Username;
+                    return username;
+                }
+            }
+            return null;
+        }
+        public bool CreateAccount(string name, string userEmail, string username, string password)
         {
             if (!username.Contains("ADMIN"))
             {
@@ -294,7 +332,7 @@ namespace ShuffledWordGameBL
                 {
                     if (!VerifyAccountExisting(username))
                     {
-                        DataLogic.CreateAccount(name, username, password);
+                        DataLogic.CreateAccount(name, userEmail, username, password);
                         return true;
                     }
                 }

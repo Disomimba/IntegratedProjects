@@ -10,6 +10,7 @@ namespace ShuffledWordGameDL
 {
     public interface IDataLogic
     {
+        public bool ForgotPassword(string newPassword, string email);
         public List<GameAccounts> GetPlayerAccounts();
         public List<AdminData> GetAdminAccounts();
         public List<Leaderboards> GetLeaderboardAccounts();
@@ -17,7 +18,7 @@ namespace ShuffledWordGameDL
         public bool InsertNewWords(string arrangedWord);
         public bool InsertShuffledWord(string shuffledWord);
         public bool RemoveWord(int index);
-        public void CreateAccount(string name, string username, string password); 
+        public void CreateAccount(string name,string userEmail, string username, string password); 
         public void AddScoreList(string username, int score, int error);
         public bool ChangePassword(string username, string old_password, string new_password);
         public bool ChangeAdminPassword(string old_password, string new_password);

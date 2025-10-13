@@ -18,15 +18,15 @@ namespace Project_1
         }
         static void WelcomePage()
         {
-            Console.Clear();
             int action;
             do
             {
                 Console.WriteLine("---------------------");
                 Console.WriteLine("[1] Register\n" +
                     "[2] Login\n" +
-                    "[3] Leaderboards\n" +
-                    "[4] Exit");
+                    "[3] Forget Password\n" +
+                    "[4] Leaderboards\n" +
+                    "[5] Exit");
                 Console.Write("Enter Action : ");
                 string input = Console.ReadLine();
                 if (int.TryParse(input, out action) && GameBL.WelcomeMenuValidator(action))
@@ -40,9 +40,12 @@ namespace Project_1
                             Login();
                             break;
                         case 3:
-                            Leaderboards();
+                            ForgotPassword();
                             break;
                         case 4:
+                            Leaderboards();
+                            break;
+                        case 5:
                             Console.WriteLine("Until next time, word wizard!");
                             break;
                     }
@@ -56,16 +59,20 @@ namespace Project_1
         public static void CreateAccount()
         {
             Console.WriteLine("---------------------");
-            Console.WriteLine("Username must be greater than or equal to 4 characters.\nPassword must be greater than or equal to 8 characters.");
+            Console.WriteLine("Username must be greater than or equal to 4 characters." +
+                "Username & Email must be unique."+
+                "\nPassword must be greater than or equal to 8 characters.");
             Console.WriteLine("---------------------");
             Console.Write("Enter your Name: ");
             string name = Console.ReadLine();
+            Console.Write("Enter your Email: ");
+            string userEmail = Console.ReadLine();
             Console.Write("Enter Username: ");
             string username = Console.ReadLine().ToUpper();
             Console.Write("Create Password: ");
             string password = Console.ReadLine();
 
-            if (BusinessLogic.CreateAccount(name, username, password))
+            if (BusinessLogic.CreateAccount(name, userEmail, username, password))
             {
                 Console.WriteLine("Account created successfully!");
             }
@@ -91,7 +98,9 @@ namespace Project_1
                 Account = BusinessLogic.AccountVerifier(username, password);
                 if (Account == "Invalid")
                 {
+
                     Console.WriteLine("Invalid Account");
+
                 }
                 else if (Account == "Admin" || Account == "Player")
                 {
@@ -108,6 +117,38 @@ namespace Project_1
                 string playerName = BusinessLogic.GetPlayerName(username);
                 Player(playerName);
             }
+        }
+        static void ForgotPassword()
+        {
+            Console.WriteLine("Forgot Password");
+            Console.WriteLine("Enter your Email");
+            string email = Console.ReadLine();
+            if (BusinessLogic.OTPSender(email))
+            {
+                Console.WriteLine("Enter OTP");
+                int otp = Convert.ToInt32(Console.ReadLine());
+                if (BusinessLogic.OTPVerifier(otp))
+                {
+                    bool changePass = ChangePasswordForgot(email);
+                    if (changePass == true)
+                    {
+                        Console.WriteLine("Password Changed!");
+                        WelcomePage();
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("Account Doesn't exist.");
+                WelcomePage();
+                Console.Clear();
+            }
+        }
+        public static bool ChangePasswordForgot(string email)
+        { 
+            Console.WriteLine("Enter your New Password");
+            string newPassword = Console.ReadLine();
+            return BusinessLogic.ForgotPassword(newPassword, email);
         }
         static void AdminMenu(string pin)
         {

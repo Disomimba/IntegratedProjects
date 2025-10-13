@@ -18,18 +18,21 @@ namespace ShuffledWordGameDL
             admin.Add(new AdminData
             {
                 Username = "ADMIN",
-                Password = "admin123"
+                Password = "admin123",
+                Email = "admin123@admin.com"
             });
             account.Add(new GameAccounts
             {
                 Name = "Abdul Malik",
                 Username = "ABDUL",
+                Email = "abdul@gmail.com",
                 Password = "abdul123"
             });
             account.Add(new GameAccounts
             {
                 Name = "Shork",
                 Username = "SHORK",
+                Email = "shork@gmail.com",
                 Password = "shork123"
             });
             string[] defaultWords = { "CASH", "EAGLE", "BRIGHT", "BOUGHT", "SARCASM" };
@@ -41,13 +44,14 @@ namespace ShuffledWordGameDL
         {
             return account;
         }
-        public void CreateAccount(string name, string username, string password)
+        public void CreateAccount(string name, string email, string username, string password)
         {
             account.Add(new GameAccounts
             {
                 Name = name,
                 Username = username,
-                Password = password
+                Password = password,
+                Email = email
             });
         }
         public bool ChangePassword(string username, string old_password, string new_password)
@@ -143,6 +147,19 @@ namespace ShuffledWordGameDL
                 return true;
             }
 
+            return false;
+        }
+
+        public bool ForgotPassword(string newPassword, string email)
+        {
+            foreach(var accounts in account)
+            {
+                if(accounts.Email == email)
+                {
+                    accounts.Password = newPassword;
+                    return true;
+                }
+            }
             return false;
         }
     }

@@ -16,10 +16,14 @@ namespace ShuffledWordGameDL
         IDataLogic interfaceDataLogic;
         public ShuffledWordDataLogic()
         {
-            //interfaceDataLogic = new InMemoryData();
+            interfaceDataLogic = new InMemoryData();
             //interfaceDataLogic = new InJsonData();
             //interfaceDataLogic = new InTextData();
-            interfaceDataLogic = new InDataBase();
+            //interfaceDataLogic = new InDataBase();
+        }
+        public bool ForgotPassword(string newPassword, string email)
+        {
+            return interfaceDataLogic.ForgotPassword(newPassword, email);
         }
         public void AddToLeaderboard(Leaderboards accountData)
         {
@@ -53,9 +57,9 @@ namespace ShuffledWordGameDL
         {
             return interfaceDataLogic.ChangeAdminPassword(old_password, new_password);
         }
-        public void CreateAccount(string name, string username, string password)
+        public void CreateAccount(string name, string userEmail, string username, string password)
         {
-            interfaceDataLogic.CreateAccount(name, username, password);
+            interfaceDataLogic.CreateAccount(name, userEmail, username, password);
         }
         public void AddScoreList(string username, int score, int error)
         {

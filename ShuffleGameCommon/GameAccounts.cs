@@ -12,6 +12,7 @@ namespace ShuffledWordGameCommon
     {
         private string username;
         private string password;
+        private string email;
         public string Username
         {
             get { return username; }
@@ -31,6 +32,17 @@ namespace ShuffledWordGameCommon
                 if (value.Length >= 8 )
                 {
                     password = value;
+                }
+            }
+        }
+        public string Email
+        {
+            get { return email; }
+            set
+            {
+                if (value.Contains("@") && value.Contains("."))
+                {
+                    email = value;
                 }
             }
         }

@@ -168,7 +168,7 @@ namespace ShuffledWordGameDL
             }
             return -1;
         }
-        public void CreateAccount(string name, string username, string password)
+        public void CreateAccount(string name, string userEmail, string username, string password)
         {
             account.Add(new GameAccounts
             {
@@ -280,6 +280,11 @@ namespace ShuffledWordGameDL
         {
             leaderboards.Add(accountData);
             SaveLeaderboardToFile();
+        }
+
+        public bool ForgotPassword(string newPassword, string email)
+        {
+            throw new NotImplementedException();
         }
     }
 }

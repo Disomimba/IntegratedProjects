@@ -59,6 +59,7 @@ namespace ShuffledWordGameDL
                 account.Add(new GameAccounts
                 {
                     Name = reader["Name"].ToString(),
+                    Email = reader["Email"].ToString(),
                     Username = reader["Username"].ToString(),
                     Password = reader["Password"].ToString()
                 });
@@ -199,7 +200,6 @@ namespace ShuffledWordGameDL
             int index = FindPlayerIndex(username);
             account[index].History.Add($"Score : {score} | Error : {error}");
         }
-       
         public bool ChangePassword(string username, string old_password, string new_password)
         {
             sqlConnection.Open();
@@ -247,12 +247,13 @@ namespace ShuffledWordGameDL
             sqlConnection.Close();
 
         }
-        public void CreateAccount(string name, string username, string password)
+        public void CreateAccount(string name, string userEmail, string username, string password)
         {
-            string insert = "Insert into GameAccounts (Name, Username, Password) values (@name, @username, @password)";
+            string insert = "Insert into GameAccounts (Name, Email, Username, Password) values (@name, @email, @username, @password)";
             sqlConnection.Open();
             SqlCommand insertCommand = new SqlCommand(insert, sqlConnection);
             insertCommand.Parameters.AddWithValue("@name", name);
+            insertCommand.Parameters.AddWithValue("@email", userEmail);
             insertCommand.Parameters.AddWithValue("@username", username);
             insertCommand.Parameters.AddWithValue("@password", password);
             insertCommand.ExecuteNonQuery();
@@ -347,6 +348,30 @@ namespace ShuffledWordGameDL
 
             }
         }
-        
-}
+        public bool ForgotPassword(string newPassword, string userEmail)
+        {
+            sqlConnection.Open();
+            string select = "Select * from GameAccounts where Email = @email";
+            SqlCommand selectCommand = new SqlCommand(select, sqlConnection);
+            selectCommand.Parameters.AddWithValue("@email", userEmail);
+            SqlDataReader reader = selectCommand.ExecuteReader();
+            if (reader.HasRows)
+            {
+                reader.Close();
+                string update = "Update GameAccounts set Password = @new_password where Email = @email";
+                SqlCommand updateCommand = new SqlCommand(update, sqlConnection);
+                updateCommand.Parameters.AddWithValue("@new_password", newPassword);
+                updateCommand.Parameters.AddWithValue("@email", userEmail);
+                updateCommand.ExecuteNonQuery();
+                sqlConnection.Close();
+                return true;
+            }
+            else
+            {
+                reader.Close();
+                sqlConnection.Close();
+                return false;
+            }
+        }
+    }
 }
