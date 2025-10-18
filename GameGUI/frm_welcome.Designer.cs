@@ -34,6 +34,7 @@
             btn_register = new Button();
             btn_leaderboards = new Button();
             btn_quit = new Button();
+            btn_forgotPassword = new Button();
             SuspendLayout();
             // 
             // lbl_welcome
@@ -86,7 +87,7 @@
             btn_leaderboards.FlatStyle = FlatStyle.Flat;
             btn_leaderboards.Font = new Font("Imprint MT Shadow", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             btn_leaderboards.ForeColor = Color.Black;
-            btn_leaderboards.Location = new Point(100, 265);
+            btn_leaderboards.Location = new Point(100, 311);
             btn_leaderboards.Name = "btn_leaderboards";
             btn_leaderboards.Size = new Size(200, 30);
             btn_leaderboards.TabIndex = 3;
@@ -101,13 +102,28 @@
             btn_quit.FlatStyle = FlatStyle.Flat;
             btn_quit.Font = new Font("Imprint MT Shadow", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             btn_quit.ForeColor = Color.Black;
-            btn_quit.Location = new Point(100, 305);
+            btn_quit.Location = new Point(100, 351);
             btn_quit.Name = "btn_quit";
             btn_quit.Size = new Size(200, 30);
             btn_quit.TabIndex = 4;
             btn_quit.Text = "QUIT";
             btn_quit.UseVisualStyleBackColor = false;
             btn_quit.Click += btn_quit_Click;
+            // 
+            // btn_forgotPassword
+            // 
+            btn_forgotPassword.BackColor = Color.FromArgb(150, 196, 254, 255);
+            btn_forgotPassword.FlatAppearance.BorderColor = Color.FromArgb(64, 0, 64);
+            btn_forgotPassword.FlatStyle = FlatStyle.Flat;
+            btn_forgotPassword.Font = new Font("Imprint MT Shadow", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btn_forgotPassword.ForeColor = Color.Black;
+            btn_forgotPassword.Location = new Point(100, 266);
+            btn_forgotPassword.Name = "btn_forgotPassword";
+            btn_forgotPassword.Size = new Size(200, 30);
+            btn_forgotPassword.TabIndex = 5;
+            btn_forgotPassword.Text = "FORGOT PASSWORD";
+            btn_forgotPassword.UseVisualStyleBackColor = false;
+            btn_forgotPassword.Click += btn_forgotPassword_Click;
             // 
             // frm_welcome
             // 
@@ -116,6 +132,7 @@
             BackColor = Color.WhiteSmoke;
             BackgroundImage = Properties.Resources.background;
             ClientSize = new Size(384, 461);
+            Controls.Add(btn_forgotPassword);
             Controls.Add(btn_quit);
             Controls.Add(btn_leaderboards);
             Controls.Add(btn_register);
@@ -137,5 +154,6 @@
         private Button btn_register;
         private Button btn_leaderboards;
         private Button btn_quit;
+        private Button btn_forgotPassword;
     }
 }

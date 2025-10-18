@@ -24,8 +24,9 @@ namespace GameGUI
             string name = txt_name.Text.Trim().ToUpper();
             string username = txt_username.Text.Trim().ToUpper();
             string password = txt_password.Text.Trim();
+            string email = txt_email.Text.Trim();
 
-            bool result = BusinessLogic.CreateAccount(name, username, password);
+            bool result = BusinessLogic.CreateAccount(name, email, username, password);
             if (result)
             {
                 MessageBox.Show("Account created successfully!");

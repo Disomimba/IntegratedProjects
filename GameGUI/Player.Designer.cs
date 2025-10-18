@@ -405,7 +405,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
-            ClientSize = new Size(384, 582);
+            ClientSize = new Size(384, 401);
             Controls.Add(pnl_history);
             Controls.Add(pnl_mechanics);
             Controls.Add(pnl_changePass);

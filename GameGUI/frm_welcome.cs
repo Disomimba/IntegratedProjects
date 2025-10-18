@@ -30,7 +30,7 @@ namespace GameGUI
             string leaderboardText = "LEADERBOARDS:\n\n";
             foreach (var leaderboards in BusinessLogic.GetLeaderboardAccounts())
             {
-                 leaderboardText += $"{leaderboards.Username} | {leaderboards.Score}\n";
+                leaderboardText += $"{leaderboards.Username} | {leaderboards.Score}\n";
             }
             MessageBox.Show(leaderboardText, "Leaderboard", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -38,6 +38,13 @@ namespace GameGUI
         private void btn_quit_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void btn_forgotPassword_Click(object sender, EventArgs e)
+        {
+            ForgotPassword forgotPass = new ForgotPassword();
+            forgotPass.Show();
+            this.Hide();
         }
     }
 }

@@ -38,6 +38,8 @@
             lbl_name = new Label();
             lbl_username = new Label();
             lbl_password = new Label();
+            lbl_email = new Label();
+            txt_email = new TextBox();
             SuspendLayout();
             // 
             // lbl_SignUp
@@ -67,7 +69,7 @@
             // 
             txt_username.BackColor = Color.FromArgb(196, 254, 255);
             txt_username.BorderStyle = BorderStyle.FixedSingle;
-            txt_username.Location = new Point(82, 234);
+            txt_username.Location = new Point(82, 296);
             txt_username.Name = "txt_username";
             txt_username.Size = new Size(215, 23);
             txt_username.TabIndex = 2;
@@ -76,7 +78,7 @@
             // 
             txt_password.BackColor = Color.FromArgb(196, 254, 255);
             txt_password.BorderStyle = BorderStyle.FixedSingle;
-            txt_password.Location = new Point(82, 286);
+            txt_password.Location = new Point(82, 348);
             txt_password.Name = "txt_password";
             txt_password.PasswordChar = '*';
             txt_password.Size = new Size(215, 23);
@@ -87,7 +89,7 @@
             btn_register.BackColor = Color.FromArgb(150, 196, 254, 255);
             btn_register.FlatStyle = FlatStyle.Flat;
             btn_register.Font = new Font("Imprint MT Shadow", 12F);
-            btn_register.Location = new Point(122, 335);
+            btn_register.Location = new Point(122, 397);
             btn_register.Name = "btn_register";
             btn_register.Size = new Size(130, 28);
             btn_register.TabIndex = 4;
@@ -131,7 +133,7 @@
             lbl_username.BackColor = Color.FromArgb(140, 84, 22, 117);
             lbl_username.Font = new Font("Microsoft YaHei", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl_username.ForeColor = Color.White;
-            lbl_username.Location = new Point(83, 213);
+            lbl_username.Location = new Point(83, 275);
             lbl_username.Name = "lbl_username";
             lbl_username.Size = new Size(76, 19);
             lbl_username.TabIndex = 7;
@@ -144,12 +146,36 @@
             lbl_password.BackColor = Color.FromArgb(140, 84, 22, 117);
             lbl_password.Font = new Font("Microsoft YaHei", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl_password.ForeColor = Color.White;
-            lbl_password.Location = new Point(83, 266);
+            lbl_password.Location = new Point(83, 328);
             lbl_password.Name = "lbl_password";
             lbl_password.Size = new Size(73, 19);
             lbl_password.TabIndex = 8;
             lbl_password.Text = "Password";
             lbl_password.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // lbl_email
+            // 
+            lbl_email.AutoSize = true;
+            lbl_email.BackColor = Color.FromArgb(140, 84, 22, 117);
+            lbl_email.Font = new Font("Microsoft YaHei", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lbl_email.ForeColor = Color.White;
+            lbl_email.Location = new Point(84, 220);
+            lbl_email.Name = "lbl_email";
+            lbl_email.Size = new Size(45, 19);
+            lbl_email.TabIndex = 10;
+            lbl_email.Text = "Email";
+            lbl_email.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // txt_email
+            // 
+            txt_email.BackColor = Color.FromArgb(196, 254, 255);
+            txt_email.BorderStyle = BorderStyle.FixedSingle;
+            txt_email.CausesValidation = false;
+            txt_email.Font = new Font("Segoe UI", 10F);
+            txt_email.Location = new Point(82, 241);
+            txt_email.Name = "txt_email";
+            txt_email.Size = new Size(215, 25);
+            txt_email.TabIndex = 9;
             // 
             // frm_registration
             // 
@@ -157,6 +183,8 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             ClientSize = new Size(384, 461);
+            Controls.Add(lbl_email);
+            Controls.Add(txt_email);
             Controls.Add(lbl_password);
             Controls.Add(lbl_username);
             Controls.Add(lbl_name);
@@ -187,5 +215,7 @@
         private Label lbl_name;
         private Label lbl_username;
         private Label lbl_password;
+        private Label lbl_email;
+        private TextBox txt_email;
     }
 }
