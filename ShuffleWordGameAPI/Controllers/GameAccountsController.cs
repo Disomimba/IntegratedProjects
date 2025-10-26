@@ -10,21 +10,26 @@ namespace ShuffleWordGameAPI.Controllers
 
     public class GameAccountsController : ControllerBase
     {
-        static GameBL BusinessProcess = new GameBL();
+        private readonly ShuffledWordGameBL.GameBL _BusinessProcess;
+
+        public GameAccountsController(ShuffledWordGameBL.GameBL gameService)
+        {
+            _BusinessProcess = gameService;
+        }
         [HttpGet()]
         public IEnumerable<GameAccounts> GetGameAccounts()
         {
-            return BusinessProcess.GetAccounts();
+            return _BusinessProcess.GetAccounts();
         }
         [HttpPost("Add Player")]
         public bool AddPlayer(string name, string email, string username, string password)
         {
-            return BusinessProcess.CreateAccount(name, email, username, password);
+            return _BusinessProcess.CreateAccount(name, email, username, password);
         }
         [HttpPost("Forgot Password")] 
         public bool OTPSender(string userEmail)
         {
-            if (BusinessProcess.OTPSender(userEmail)) 
+            if (_BusinessProcess.OTPSender(userEmail)) 
             {
                 return true; 
             }
@@ -33,9 +38,9 @@ namespace ShuffleWordGameAPI.Controllers
         [HttpPatch("Verify OTP")] 
         public bool VerifyOTP(string email, int otp, string newPassword)
         {
-            if (BusinessProcess.OTPVerifier(otp)) 
+            if (_BusinessProcess.OTPVerifier(otp)) 
             {
-                BusinessProcess.ForgotPassword(newPassword, email);
+                _BusinessProcess.ForgotPassword(newPassword, email);
                 return true; 
             }
             return false; 
@@ -44,17 +49,17 @@ namespace ShuffleWordGameAPI.Controllers
         [HttpPatch("Change Player Password")]
         public bool ChangePassword(string username, string old_pass, string new_pass)
         {
-            return BusinessProcess.ChangePassword(username, old_pass, new_pass);
+            return _BusinessProcess.ChangePassword(username, old_pass, new_pass);
         }
         [HttpPatch("Update Player History")]
         public void UpdatePlayerHistory(string name)
         {
-            BusinessProcess.UpdatePlayerHistory(name);
+            _BusinessProcess.UpdatePlayerHistory(name);
         }
         [HttpGet("Show Player History")]
         public List<string> ShowPlayerHistory(string user)
         {
-            return BusinessProcess.ShowPlayerHistory(user);
+            return _BusinessProcess.ShowPlayerHistory(user);
         }
     }
 }

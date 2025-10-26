@@ -13,20 +13,21 @@ namespace ShuffledWordGameBL
         int otp;
         static ShuffledWordDataLogic DataLogic = new ShuffledWordDataLogic();
         static List<int> givenIndex = new List<int>();
-        public GameBL()
+
+        private readonly EmailService _emailService;
+        public GameBL(EmailService emailService)
         {
             Shuffle();
+            _emailService = emailService;
         }
-
         public bool OTPSender(string email)
         {
             Random OTPGenerator = new Random();
             otp = OTPGenerator.Next(100000, 1000000);
             string username = VerifyAccountExistingEmail(email);
-            EmailService emailService = new EmailService();
             if (username != null)
             {
-                emailService.SendEmail(username,otp, email);
+                _emailService.SendEmail(username,otp, email);
                 return true;
             }
             return false;

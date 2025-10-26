@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShuffledWordGameCommon", "S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShuffledWordGameDL", "ShuffledWordGameDL\ShuffledWordGameDL.csproj", "{7F9101A8-8631-44E7-A9D4-7F36FC63E6B6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShuffleWordGameAPI", "ShuffleWordGameAPI\ShuffleWordGameAPI.csproj", "{35304072-E73C-22A2-E409-AA9A16E5E06C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{7F9101A8-8631-44E7-A9D4-7F36FC63E6B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F9101A8-8631-44E7-A9D4-7F36FC63E6B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F9101A8-8631-44E7-A9D4-7F36FC63E6B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35304072-E73C-22A2-E409-AA9A16E5E06C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35304072-E73C-22A2-E409-AA9A16E5E06C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35304072-E73C-22A2-E409-AA9A16E5E06C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35304072-E73C-22A2-E409-AA9A16E5E06C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

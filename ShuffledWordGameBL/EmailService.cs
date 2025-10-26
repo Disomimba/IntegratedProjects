@@ -1,20 +1,31 @@
 ﻿using MailKit.Net.Smtp;
 using MimeKit;
+using MailKit.Security;
+using Microsoft.Extensions.Configuration;
+using ShuffledWordGameCommon;
 
 namespace ShuffledWordGameBL;
-class EmailService
+public class EmailService
 {
+    private readonly IConfiguration _configuration;
+
+    public EmailService(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
     public void SendEmail(string user, int otp, string userEmail)
     {
         var message = new MimeMessage();
 
-        message.From.Add(new MailboxAddress("Mekus-Mekus", "ShuffledWord@data.com"));
-        message.To.Add(new MailboxAddress("Account Owner", userEmail));
-        message.Subject = "Forget Password";
+        message.From.Add(new MailboxAddress(
+            _configuration["EmailSettings:FromName"],
+            _configuration["EmailSettings:FromEmail"]));
 
-        // This is a simplified version of the body shown in the image
-        string emailText = $"NEVER SHARE YOUR OTP especially on social media and SMS or email links.\n{user} You are trying to forgot your password here's your OTP " + otp ;
+        message.To.Add(new MailboxAddress(user, userEmail));
+        message.Subject = _configuration["EmailSettings:Subject"];
         
+        string emailText = $"NEVER SHARE YOUR OTP especially on social media and SMS or email links.\nYou are trying to forgot your password here's your OTP " + otp;
+
         message.Body = new TextPart("plain")
         {
             Text = emailText
@@ -22,20 +33,19 @@ class EmailService
 
         using (var client = new SmtpClient())
         {
-            var smtpHost = "sandbox.smtp.mailtrap.io";
-            var smtpPort = 2525;
-            var tsl = MailKit.Security.SecureSocketOptions.StartTls;
+            client.Connect(
+                    _configuration["EmailSettings:SmtpHost"],
+                    Convert.ToInt16(_configuration["EmailSettings:SmtpPort"]),
+                    SecureSocketOptions.StartTls
+                );
 
-            client.Connect(smtpHost, smtpPort, tsl);
-
-            var username = "4ed065b1e113cb";
-            var password = "432d4af485c5d1";
-
-            client.Authenticate(username, password);
+            client.Authenticate(
+                _configuration["EmailSettings:Username"],
+                _configuration["EmailSettings:Password"]
+                );
 
             client.Send(message);
             client.Disconnect(true);
-            
         }
     }
 }

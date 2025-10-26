@@ -9,17 +9,21 @@ namespace ShuffleWordGameAPI.Controllers
     [ApiController]
     public class LeaderboardController : ControllerBase
     {
-        static GameBL BusinessProcess = new GameBL();
+        private readonly ShuffledWordGameBL.GameBL _BusinessProcess;
 
+        public LeaderboardController(ShuffledWordGameBL.GameBL gameService)
+        {
+            _BusinessProcess = gameService;
+        }
         [HttpGet("Get Leaderboards")]
         public List<Leaderboards> GetLeaderboards()
         {
-            return BusinessProcess.GetLeaderboardAccounts();
+            return _BusinessProcess.GetLeaderboardAccounts();
         }
         [HttpDelete("End Season")]
         public void RemoveLeaderboardEntry()
         {
-             BusinessProcess.ClearLeaderboard();
+            _BusinessProcess.ClearLeaderboard();
         }
     }
 }
